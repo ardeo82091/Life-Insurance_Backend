@@ -3,30 +3,25 @@ const {DatabaseMongoose} = require('../repository/database')
 const bcrypt = require('bcrypt');
 class Employee
 {
-    constructor(firstName,lastName,credential,dob,age,email,role)
+    constructor(firstName,lastName,credential,role)
     {
         this.firstName   =    firstName;
         this.lastName    =    lastName;
         this.credential  =    credential;
-        this.dateOfBirth =    dob;
-        this.age         =    age;
-        this.email       =    email;
         this.role        =    role;
         this.isActive    =    true;
     }
 
-    static async createNewEmployee(userName,password,firstName,lastName,dob,email)
+    static async createNewEmployee(userName,password,firstName,lastName,role)
     {
-        const role = "employee";
         const [flag,message,newCredential] = await Credentials.createCredential(userName,password);
         if(flag === false)
         {
             return [false ,"LoginID Already Exists"];
         }
-        let age = await Employee.age(dob);
         const db = new DatabaseMongoose();
         const dCredential = await db.insertOneCred(newCredential);
-        const [record,isInserted] = await db.insertOneEmployee(new Employee(firstName,lastName,dCredential, dob,age,email,role));
+        const [record,isInserted] = await db.insertOneEmployee(new Employee(firstName,lastName,dCredential,role));
         if(!isInserted)
         {
             await db.deleteOneCred({"_id":dCredential._id});
@@ -35,7 +30,7 @@ class Employee
         return [true,"Employee Created Sucessfully"];
     }
 
-    static async createAdmin(userName,password,firstName,lastName,dob,email)
+    static async createAdmin(userName,password,firstName,lastName)
     {
         const role = "admin";
         const [flag,message,newCredential] = await Credentials.createCredential(userName,password);
@@ -44,22 +39,15 @@ class Employee
             return [false ,"LoginID Already Exists"];
         }
         console.log("l;",newCredential)
-        let age = await Employee.age(dob);
         const db = new DatabaseMongoose();
         let dCredential = await db.insertOneCred(newCredential);
-        const [record,isInserted] = await db.insertOneEmployee(new Employee(firstName,lastName,dCredential, dob,age,email,role));
+        const [record,isInserted] = await db.insertOneEmployee(new Employee(firstName,lastName,dCredential,role));
         if(!isInserted)
         {
             await db.deleteOneCred({"_id":dCredential._id});
             return [false,record];
         }
         return [true,"ADmin Created Sucessfully"];
-    }
-
-    static async age(dateOfBirth)
-    {
-        const yearOfBirth = new Date(dateOfBirth);
-        return 2022-yearOfBirth.getFullYear(); 
     }
 
     async comparePassword(password){

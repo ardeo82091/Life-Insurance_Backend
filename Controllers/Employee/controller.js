@@ -4,7 +4,7 @@ const Credentials = require('../../view/credential.js');
 
 async function createAdmin()
 {
-    await Employee.createAdmin("ankit","ankit@123","Ankit","Raj","2000-11-17","ar82091@gmail.com");
+    await Employee.createAdmin("ankit","ankit@123","Ankit","Raj");
     return;
 }
 
@@ -20,8 +20,8 @@ async function createEmployee(req,resp)
         resp.status(401).send(`${newPayload.firstName} is Inactive`)
         return;
     }
-    const {userName,password,firstName,lastName,dateOfBirthob,email} = req.body;
-    const [isEmployeCreated,msz] = await Employee.createNewEmployee(userName,password,firstName,lastName,dateOfBirthob,email);
+    const {userName,password,firstName,lastName,role} = req.body;
+    const [isEmployeCreated,msz] = await Employee.createNewEmployee(userName,password,firstName,lastName,role);
     if(!isEmployeCreated)
     {
         resp.status(403).send(msz);
