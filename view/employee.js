@@ -135,24 +135,6 @@ class Employee {
         );
         return [true, "Updated"];
 
-      case "dateOfBirth":
-        await db.updateOneEmployee(
-          { _id: dUser._id },
-          { $set: { dateOfBirth: value } }
-        );
-        await db.updateOneEmployee(
-          { _id: dUser._id },
-          { $set: { age: await Employee.age(value) } }
-        );
-        return [true, "Updated"];
-
-      case "email":
-        await db.updateOneEmployee(
-          { _id: dUser._id },
-          { $set: { email: value } }
-        );
-        return [true, "Updated"];
-
       default:
         return [false, "Not Updated"];
     }
