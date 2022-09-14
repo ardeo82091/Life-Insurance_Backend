@@ -15,6 +15,7 @@ const {
   updateCustomer,
   deleteCustomer,
 } = require("./Controllers/Customer/controller.js");
+
 const {
   createAdmin,
   createEmployee,
@@ -24,7 +25,18 @@ const {
   deleteEmployee,
 } = require("./Controllers/Employee/controller.js");
 
+const {
+  createAgent,
+  getAllAgent,
+  noOfAgent,
+  updateAgent,
+  deleteAgent,
+} = require("./Controllers/Employee/controller.js");
+
+
+
 app.post("/api/v1/login", async (req, resp) => login(req, resp));
+
 
 //Employee
 app.post("/api/v1/createEmployee", async (req, resp) =>
@@ -60,7 +72,29 @@ app.post("/api/v1/deleteCustomer/:userName", async (req, resp) =>
   deleteCustomer(req, resp)
 );
 
+
+//Agent
+app.post("/api/v1/createAgent", async (req, resp) =>
+  createAgent(req, resp)
+);
+app.post("/api/v1/getAllAgent", async (req, resp) =>
+  getAllAgent(req, resp)
+);
+app.get("/api/v1/numberOfAgent", async (req, resp) =>
+  noOfAgent(req, resp)
+);
+app.put("/api/v1/updateAgent/:userName", async (req, resp) =>
+  updateAgent(req, resp)
+);
+app.post("/api/v1/deleteAgent/:userName", async (req, resp) =>
+  deleteAgent(req, resp)
+);
+
+
+//logout
+app.post("/api/v1/logout", (req,resp) =>logout(req,resp));
+
 app.listen(8082, async () => {
-  // await createAdmin();
+  await createAdmin();
   console.log("app is started at port 8082");
 });

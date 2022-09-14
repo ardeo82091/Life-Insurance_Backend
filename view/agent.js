@@ -1,8 +1,9 @@
 const Credentials = require('../view/credential')
-const {DatabaseMongoose} = require('../repository/database')
+const {DatabaseMongoose} = require('../repository/database');
+const nodeModules = require('node-modules');
 let id =0;
 class Agent{
-    constructor(fullName,credential,address,emailId,qualification)
+    constructor(fullName,credential,address,emailId,qualification,role,isActive)
     {
         this.fullName      =  fullName;
         this.agentCode     =  "AGNT00"+(id++);
@@ -10,23 +11,36 @@ class Agent{
         this.address       =  address;
         this.emailId       =  emailId;
         this.qualification =  qualification;
-        this.role          =  "agent";
-        this.isActive      =  true;
+        this.role          =  role;
+        this.isActive      =  isActive;
     }
 
-    static async createNewAgent(fullName,userName,password,address,emailId,qualification)
-    {
-
-        const [flag,message,newCredential] = await Credentials.createCredential(userName,password);
-        if(flag === false)
-        {
+    static async createNewAgent(
+        fullName,
+        userName,
+        password,
+        address,
+        emailId,
+        qualification,
+        role,
+        isActive
+    ){
+        const [flag,message,newCredential] = await Credentials.createCredential(
+            userName,
+            password
+        );
+        if(flag === false){
             return [false,"AgentName already Exists"]
         }
         const db = new DatabaseMongoose();
-        let dCredential = await db.insertOneCred(newCredential);
-        const [record,isInserted] = await db.insertOneAgent(new Agent(fullName,dCredential,address,emailId,qualification));
-        if(!isInserted)
-        {
+        const [dCredential, isCredCreated] = await db.insertOneCred(newCredential);
+        if (!isCredCreated) {
+            return [false, dCredential];
+        }
+        const [record,isInserted] = await db.insertOneAgent(
+            new Agent(fullName,dCredential._id,address,emailId,qualification,role,isActive)
+        );
+        if(!isInserted) {
             await db.deleteOneCred({"_id":dCredential._id});
             return [false,record];
         }
@@ -42,7 +56,7 @@ class Agent{
             return [null,false];
         }
         const findAgent = await db.findOneAgent({"credential":findCred._id});
-        if(findAgent && findAgent.isActive)
+        if(findAgent)
         {
             return [findAgent,true];
         }
@@ -85,26 +99,51 @@ class Agent{
         switch (propertyToUpdate) 
         {
             case "FullName": 
-                await db.updateOneAgent({_id:dUser._id},{$set:{fullName:value}})
+                await db.updateOneAgent(
+                    {_id:dUser._id},
+                    {$set:{fullName:value}}
+                );
                 return [true,"Updated"];
 
             case "UserName":
-                await db.updateOneCred({_id:dUser.credential},{$set:{userName:value}}) 
+                await db.updateOneCred(
+                    {_id:dUser.credential},
+                    {$set:{userName:value}}
+                ); 
                 return [true,"Updated"];
 
             case "address":
-                await db.updateOneAgent({_id:dUser._id},{$set:{address:value}})
+                await db.updateOneAgent(
+                    {_id:dUser._id},
+                    {$set:{address:value}}
+                );
                 return [true,"Updated"];
                 
             case "email":
-                await db.updateOneAgent({_id:dUser._id},{$set:{emailId:value}})
+                await db.updateOneAgent(
+                    {_id:dUser._id},
+                    {$set:{emailId:value}}
+                );
                 return [true,"Updated"];
 
             case "qualification":
-                await db.updateOneAgent({_id:dUser._id},{$set:{qualification:value}})
+                await db.updateOneAgent(
+                    {_id:dUser._id},
+                    {$set:{qualification:value}}
+                );
                 return [true,"Updated"];
+
+            case "Password":
+                await db.updateOneCred(
+                  { _id: dUser.credential },
+                  { $set: { password: value }}                    
+                );
+                bcrypt.hash(value,10);
+                return [true, "Updated"];
 
             default: return [false,"Not Updated"];
         }
     }
 }
+
+module.exports = Agent;

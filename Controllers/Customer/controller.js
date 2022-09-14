@@ -104,6 +104,7 @@ async function updateCustomer(req,resp)
         return;
     }
     resp.status(401).send("Login with correct username");
+    return;
 }
 
 async function deleteCustomer (req,resp)

@@ -3,6 +3,7 @@ const Employee = require('../../view/employee');
 const JWTPayload = require('../../view/authentication.js');
 const Credentials = require('../../view/credential.js');
 const bcrypt = require('bcrypt');
+const Agent = require('../../view/agent');
 async function login(req, resp)
 {
     const userName = req.body.userName;
@@ -10,11 +11,20 @@ async function login(req, resp)
 
     let [dUser,isUsernameExist] = await Customer.findCustomer(userName);
     let [dEmplyee,isEmployeeNameExist] = await Employee.findEmployee(userName);
-    if(!isUsernameExist && !isEmployeeNameExist)
+    let [dAgent,isAgentExist] = await Agent.findAgent(userName);
+    
+    if(!isUsernameExist && !isEmployeeNameExist && !isAgentExist)
     {
-        resp.status(401).send("UserName Not Exist");
+        resp.status(401).send("Invalid Credentials");
         return;
     }
+
+    if(dUser.isActive==false || dEmplyee.isActive==false || dAgent.isActive==false)
+    {
+        resp.status(401).send("Invalid Credentials");
+    }
+
+    //Customer
     if(isUsernameExist)
     {
         let [isuserNameExist,credExist] = await Credentials.findCredId(dUser.credential);
@@ -35,6 +45,8 @@ async function login(req, resp)
         resp.status(201).send(dUser);
         return;
     }
+
+    //Employee
     if(isEmployeeNameExist)
     {
         let [isuserNameExist,credExist] = await Credentials.findCredId(dEmplyee.credential);
@@ -53,6 +65,28 @@ async function login(req, resp)
         const newToken = newPayload.createToken();
         resp.cookie("mytoken",newToken)
         resp.status(201).send(dEmplyee);
+        return;
+    }
+
+    //Agent
+    if(isAgentExist)
+    {
+        let [isuserNameExist,credExist] = await Credentials.findCredId(dAgent.credential);
+        if(!isuserNameExist)
+        {
+            resp.status(401).send("UserName Not Exist");
+            return;
+        }
+        let isPassword = await bcrypt.compare(password, credExist.password);
+        if(isPassword == false)
+        {
+            resp.status(401).send("Invalid Credentials")
+            return;
+        }
+        const newPayload = new JWTPayload(dAgent)
+        const newToken = newPayload.createToken();
+        resp.cookie("mytoken",newToken)
+        resp.status(201).send(dAgent);
         return;
     }
 }

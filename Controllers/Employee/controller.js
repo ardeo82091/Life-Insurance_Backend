@@ -3,7 +3,7 @@ const JWTPayload = require("../../view/authentication.js");
 const Credentials = require("../../view/credential.js");
 
 async function createAdmin() {
-  await Employee.createAdmin("ankit", "ankit@123", "Ankit", "Raj");
+  await Employee.createAdmin("ankit", "ankit@123", "Ankit", "Raj",true);
   return;
 }
 

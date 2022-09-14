@@ -28,7 +28,6 @@ class Employee {
     }
     const db = new DatabaseMongoose();
     const [dCredential, isCredCreated] = await db.insertOneCred(newCredential);
-    console.log(dCredential);
     if (!isCredCreated) {
       return [false, dCredential];
     }
@@ -42,7 +41,7 @@ class Employee {
     return [true, "Employee Created Sucessfully"];
   }
 
-  static async createAdmin(userName, password, firstName, lastName) {
+  static async createAdmin(userName, password, firstName, lastName,isActive) {
     const role = "admin";
     const [flag, message, newCredential] = await Credentials.createCredential(
       userName,
@@ -51,11 +50,10 @@ class Employee {
     if (flag === false) {
       return [false, "LoginID Already Exists"];
     }
-    console.log("l;", newCredential);
     const db = new DatabaseMongoose();
     let dCredential = await db.insertOneCred(newCredential);
     const [record, isInserted] = await db.insertOneEmployee(
-      new Employee(firstName, lastName, dCredential, role)
+      new Employee(firstName, lastName, dCredential.id, role,isActive)
     );
     if (!isInserted) {
       await db.deleteOneCred({ _id: dCredential._id });
@@ -76,7 +74,7 @@ class Employee {
       return [null, false];
     }
     const findEmployee = await db.findOneEmployee({ credential: findCred._id });
-    if (findEmployee && findEmployee.isActive == true) {
+    if (findEmployee) {
       return [findEmployee, true];
     }
     return [null, false];
@@ -133,6 +131,14 @@ class Employee {
           { _id: dUser.credential },
           { $set: { userName: value } }
         );
+        return [true, "Updated"];
+
+      case "Password":
+        await db.updateOneCred(
+          { _id: dUser.credential },
+          { $set: { password: value } }
+        );
+        bcrypt.hash(value,10);
         return [true, "Updated"];
 
       default:
