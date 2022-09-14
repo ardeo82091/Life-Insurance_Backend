@@ -28,9 +28,6 @@ class Employee {
     }
     const db = new DatabaseMongoose();
     const [dCredential, isCredCreated] = await db.insertOneCred(newCredential);
-    if (!isCredCreated) {
-      return [false, dCredential];
-    }
     const [record, isInserted] = await db.insertOneEmployee(
       new Employee(firstName, lastName, dCredential._id, role, isActive)
     );
@@ -51,9 +48,9 @@ class Employee {
       return [false, "LoginID Already Exists"];
     }
     const db = new DatabaseMongoose();
-    let dCredential = await db.insertOneCred(newCredential);
+    let [dCredential,isInsertedCred] = await db.insertOneCred(newCredential);
     const [record, isInserted] = await db.insertOneEmployee(
-      new Employee(firstName, lastName, dCredential.id, role,isActive)
+      new Employee(firstName, lastName, dCredential, role,isActive)
     );
     if (!isInserted) {
       await db.deleteOneCred({ _id: dCredential._id });
@@ -108,7 +105,7 @@ class Employee {
     const db = new DatabaseMongoose();
     let [dUser, isUserExist] = await Employee.findEmployee(userName);
     if (!isUserExist) {
-      return [false, "User Not Exist"];
+      return [false, "Not found User to Update"];
     }
 
     switch (propertyToUpdate) {
@@ -136,9 +133,9 @@ class Employee {
       case "Password":
         await db.updateOneCred(
           { _id: dUser.credential },
-          { $set: { password: value } }
+          { $set: { password: await bcrypt.hash(value,10) } }
         );
-        bcrypt.hash(value,10);
+        
         return [true, "Updated"];
 
       default:

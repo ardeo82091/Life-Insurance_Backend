@@ -31,7 +31,7 @@ const {
   noOfAgent,
   updateAgent,
   deleteAgent,
-} = require("./Controllers/Employee/controller.js");
+} = require("./Controllers/Agent/controller.js");
 
 
 
@@ -95,6 +95,6 @@ app.post("/api/v1/deleteAgent/:userName", async (req, resp) =>
 app.post("/api/v1/logout", (req,resp) =>logout(req,resp));
 
 app.listen(8082, async () => {
-  await createAdmin();
+  //await createAdmin();
   console.log("app is started at port 8082");
 });

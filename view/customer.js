@@ -1,5 +1,6 @@
 const Credentials = require('./credential');
 const {DatabaseMongoose} = require('../repository/database')
+const bcrypt = require("bcrypt");
 class Customer
 {
     constructor(firstName,lastName,credential,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation,isActive)
@@ -31,7 +32,7 @@ class Customer
         }
         let age = Customer.age(dob);
         const db = new DatabaseMongoose();
-        let dCredential = await db.insertOneCred(newCredential);
+        let [dCredential,isCredCreated] = await db.insertOneCred(newCredential);
         let [record,isInserted]=await db.insertOneCustomer(
             new Customer(firstName,lastName,dCredential._id,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation,isActive)
         );
@@ -56,6 +57,7 @@ class Customer
         const findCustomer = await db.findOneCustomer(
             {"credential":findCred._id}
         );
+        
         if(findCustomer)
         {
             return [findCustomer,true];
@@ -104,7 +106,7 @@ class Customer
         let [dUser,isUserExist] = await Customer.findCustomer(userName);
         if(!isUserExist)
         {
-            return [false,"User Not Exist"];
+            return [false,"Customer not Found to updtae"];
         }
         const db = new DatabaseMongoose();
         switch (propertyToUpdate) 
@@ -179,9 +181,8 @@ class Customer
             case "Password":
                 await db.updateOneCred(
                   { _id: dUser.credential },
-                  { $set: { password: value } }
+                  { $set: { password: await bcrypt.hash(value,10) } }
                 );
-                bcrypt.hash(value,10);
                 return [true, "Updated"];
 
             default: return [false,"Not Updated"];

@@ -1,6 +1,6 @@
 const Credentials = require('../view/credential')
 const {DatabaseMongoose} = require('../repository/database');
-const nodeModules = require('node-modules');
+const bcrypt = require("bcrypt");
 let id =0;
 class Agent{
     constructor(fullName,credential,address,emailId,qualification,role,isActive)
@@ -34,9 +34,6 @@ class Agent{
         }
         const db = new DatabaseMongoose();
         const [dCredential, isCredCreated] = await db.insertOneCred(newCredential);
-        if (!isCredCreated) {
-            return [false, dCredential];
-        }
         const [record,isInserted] = await db.insertOneAgent(
             new Agent(fullName,dCredential._id,address,emailId,qualification,role,isActive)
         );
@@ -93,7 +90,7 @@ class Agent{
         let [dUser,isUserExist] = await Agent.findAgent(userName);
         if(!isUserExist)
         {
-            return [false,"User Not Exist"];
+            return [false,"Agent Not Found to Update"];
         }
         const db = new DatabaseMongoose();
         switch (propertyToUpdate) 
@@ -136,9 +133,8 @@ class Agent{
             case "Password":
                 await db.updateOneCred(
                   { _id: dUser.credential },
-                  { $set: { password: value }}                    
+                  { $set: { password: await bcrypt.hash(value,10) }}                    
                 );
-                bcrypt.hash(value,10);
                 return [true, "Updated"];
 
             default: return [false,"Not Updated"];

@@ -39,6 +39,7 @@ class Credentials
     {
         const db = new DatabaseMongoose();
         let [isuserNameExist,credExist] = await  Credentials.finduserName(userName);
+        console.log(credExist)
         if(isuserNameExist)
         {
             return [false,"userName Already Exist",null]

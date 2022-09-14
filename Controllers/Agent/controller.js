@@ -61,7 +61,7 @@ async function getAllAgent(req,resp)
     }
     let startIndex = (pageNumber - 1) * limit;
     let endIndex = pageNumber * limit;
-    resp.status(201).send(allAgents.slice(startIndex,endIndex));
+    resp.status(201).send([allAgents.slice(startIndex,endIndex),allAgents]);
     return;
 }
 
@@ -96,18 +96,18 @@ async function updateAgent(req,resp)
     let [employee,isEmployeeEsists] = await Employee.findEmployee(userName);
     let [agent,isAgentExists] = await Agent.findAgent(userName);
 
-    //Employee Update Customer
+    //Employee Update Agent
     if(isEmployeeEsists){
         if(employee.credential != newPayload.userName){
             resp.status(401).send("please login with correct userName")
             return;
         }
-        let {
-            agenttoUpdate,
+        const {
+            agentToUpdate,
             propertyToUpdate,
             value} = req.body;
 
-        const [isUpdate,msz] =await Agent.updateAgent(agenttoUpdate,propertyToUpdate,value);
+        const [isUpdate,msz] =await Agent.updateAgent(agentToUpdate,propertyToUpdate,value);
         if(!isUpdate){
             resp.status(403).send(msz)
             return;
@@ -115,7 +115,7 @@ async function updateAgent(req,resp)
         resp.status(201).send(msz);
         return;
     }
-    //CustomerUpdateHimself
+    //AgentUpdateHimself
     if(isAgentExists){
         if(agent.credential != newPayload.userName){
             resp.status(401).send("please login with correct userName")

@@ -19,14 +19,14 @@ async function login(req, resp)
         return;
     }
 
-    if(dUser.isActive==false || dEmplyee.isActive==false || dAgent.isActive==false)
-    {
-        resp.status(401).send("Invalid Credentials");
-    }
-
     //Customer
     if(isUsernameExist)
     {
+        if(dUser.isActive==false)
+        {
+            resp.status(401).send("User Not Found");
+            return;
+        }
         let [isuserNameExist,credExist] = await Credentials.findCredId(dUser.credential);
         if(!isuserNameExist)
         {
@@ -49,6 +49,11 @@ async function login(req, resp)
     //Employee
     if(isEmployeeNameExist)
     {
+        if(dEmplyee.isActive==false)
+        {
+            resp.status(401).send("Employee Not Found");
+            return;
+        }
         let [isuserNameExist,credExist] = await Credentials.findCredId(dEmplyee.credential);
         if(!isuserNameExist)
         {
@@ -71,6 +76,11 @@ async function login(req, resp)
     //Agent
     if(isAgentExist)
     {
+        if(dAgent.isActive==false)
+        {
+            resp.status(401).send("Agent Not Found");
+            return;
+        }
         let [isuserNameExist,credExist] = await Credentials.findCredId(dAgent.credential);
         if(!isuserNameExist)
         {

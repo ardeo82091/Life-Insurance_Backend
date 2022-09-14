@@ -6,8 +6,8 @@ const bcrypt = require('bcrypt');
 
 async function createCustomer(req,resp)
 {
-    const {firstName,lastName,userName,password,dateOfBirth,address,email,state,city,pincode,nominee,nomineeRelation} = req.body;
-    const [isCustomerCreate,msz] = await Customer.createNewCustomer(firstName,lastName,userName,password,dateOfBirth,address,email,state,city,pincode,nominee,nomineeRelation);
+    const {firstName,lastName,userName,password,dateOfBirth,address,email,state,city,pincode,nominee,nomineeRelation,role,isActive} = req.body;
+    const [isCustomerCreate,msz] = await Customer.createNewCustomer(firstName,lastName,userName,password,dateOfBirth,address,email,state,city,pincode,nominee,nomineeRelation,role,isActive);
     if(!isCustomerCreate)
     {
         resp.status(403).send(msz);
@@ -35,7 +35,7 @@ async function getAllCustomer(req,resp)
     }
     let startIndex = (pageNumber - 1) * limit;
     let endIndex = pageNumber * limit;
-    resp.status(201).send(allCustomer.slice(startIndex,endIndex));
+    resp.status(201).send([allCustomer.slice(startIndex,endIndex),allCustomer]);
     return;
 }
 
