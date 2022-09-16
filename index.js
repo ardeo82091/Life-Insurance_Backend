@@ -58,7 +58,7 @@ app.post("/api/v1/login", async (req, resp) => login(req, resp));
 app.post("/api/v1/createEmployee", async (req, resp) =>
   createEmployee(req, resp)
 );
-app.get("/api/v1/getAllEmployee", async (req, resp) =>
+app.post("/api/v1/getAllEmployee", async (req, resp) =>
   getAllEmployee(req, resp)
 );
 app.get("/api/v1/numberOfEmployee", async (req, resp) =>
@@ -75,7 +75,7 @@ app.post("/api/v1/deleteEmployee/:userName", async (req, resp) =>
 app.post("/api/v1/createCustomer", async (req, resp) =>
   createCustomer(req, resp)
 );
-app.get("/api/v1/getAllCustomer", async (req, resp) =>
+app.post("/api/v1/getAllCustomer", async (req, resp) =>
   getAllCustomer(req, resp)
 );
 app.get("/api/v1/numberOfCustomer", async (req, resp) =>
@@ -93,7 +93,7 @@ app.post("/api/v1/deleteCustomer/:userName", async (req, resp) =>
 app.post("/api/v1/createAgent", async (req, resp) =>
   createAgent(req, resp)
 );
-app.get("/api/v1/getAllAgent", async (req, resp) =>
+app.post("/api/v1/getAllAgent", async (req, resp) =>
   getAllAgent(req, resp)
 );
 app.get("/api/v1/numberOfAgent", async (req, resp) =>
