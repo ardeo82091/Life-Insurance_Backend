@@ -85,7 +85,7 @@ async function updateAgent(req,resp)
 {
     let userName = req.params.userName;
     let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
-    if(newPayload.role != "agent" && newPayload.role!="employee"){
+    if(newPayload.role != "agent" && newPayload.role!="employee" && newPayload.role!="admin"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
@@ -147,14 +147,13 @@ async function deleteAgent(req,resp)
         req.cookies["mytoken"]
     );
 
-    if(newPayload.role != "agent" && newPayload.role!="employee"){
+    if(newPayload.role != "admin" && newPayload.role!="employee"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
     let [employee,isEmployeeEsists] = await Employee.findEmployee(userName);
-    let [agent,isAgentExists] = await Agent.findAgent(userName);
     
-    //Employee Update Agent
+    //Employee Delete Agent
     if(isEmployeeEsists){
         if(employee.credential != newPayload.userName){
             resp.status(401).send("please login with correct userName")
@@ -172,24 +171,25 @@ async function deleteAgent(req,resp)
         resp.status(201).send("Updated");
         return;
     }
-    //AgentUpdateHimself
-    if(isAgentExists){
-        if(agent.credential != newPayload.userName){
-            resp.status(401).send("please login with correct userName")
-            return;
-        }
-        const AgentId = req.body.AgentId;
-        let [Agentfind, isAgentIdExists] =await  Agent.findAgentId(AgentId);
-        if(!isAgentIdExists)
-        {
-            resp.status(403).send("Agent not Found");
-            return;
-        }
-        (Agentfind.isActive== true)? (Agentfind.isActive = false) : (Agentfind.isActive = true);
-        await Agent.updateAgentActive(Agentfind.isActive,Agentfind._id);
-        resp.status(201).send("Updated");
-        return;
-    }
+    resp.status(403).send("User Not found");
+//    Agent Delete Himself
+//    if(isAgentExists){
+//     if(agent.credential != newPayload.userName){
+//            resp.status(401).send("please login with correct userName")
+//            return;
+//        }
+//        const AgentId = req.body.AgentId;
+//        let [Agentfind, isAgentIdExists] =await  Agent.findAgentId(AgentId);
+//        if(!isAgentIdExists)
+//        {
+//            resp.status(403).send("Agent not Found");
+//            return;
+//        }
+//        (Agentfind.isActive== true)? (Agentfind.isActive = false) : (Agentfind.isActive = true);
+//        await Agent.updateAgentActive(Agentfind.isActive,Agentfind._id);
+//        resp.status(201).send("Updated");
+//        return;
+//    }
 }
 
 module.exports = {
