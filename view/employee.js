@@ -135,7 +135,6 @@ class Employee {
           { _id: dUser.credential },
           { $set: { password: await bcrypt.hash(value,10) } }
         );
-        
         return [true, "Updated"];
 
       default:

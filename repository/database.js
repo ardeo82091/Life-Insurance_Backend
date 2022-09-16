@@ -3,6 +3,8 @@ const customerModel = require('../model/customer')
 const employeeModel = require('../model/employee')
 const credModel = require('../model/credential')
 const agentModel = require('../model/agent')
+const stateModel = require('../model/state')
+const cityModel = require('../model/city')
 class DatabaseMongoose {
     constructor() {
         this._connect()
@@ -16,6 +18,8 @@ class DatabaseMongoose {
                 console.error(err)
             })
     }
+
+    //insert
     async insertOneCustomer(user) {
         try {
             let newRecord = await customerModel.create(user)
@@ -52,8 +56,27 @@ class DatabaseMongoose {
             return [e.message,false];
         }
     }
+    async insertOneState(state) {
+        try {
+            let newRecord = await stateModel.create(state)
+            return newRecord;
+        }
+        catch (e) {
+            return e.message;
+        }
+    }
+    async insertOneCity(city) {
+        try {
+            let newRecord = await cityModel.create(city)
+            return newRecord;
+        }
+        catch (e) {
+            return e.message;
+        }
+    }
 
 
+    //find
     async findOneCustomer(user){
         try {
             let newRecord = await customerModel.findOne(user);
@@ -90,8 +113,27 @@ class DatabaseMongoose {
             console.log(e.message);
         }
     }
+    async findOneState(state){
+        try {
+            let newRecord = await stateModel.findOne(state);
+            return newRecord;
+        }
+        catch (e) {
+            console.log(e.message);
+        }
+    }
+    async findOneCity(city){
+        try {
+            let newRecord = await cityModel.findOne(city);
+            return newRecord;
+        }
+        catch (e) {
+            console.log(e.message);
+        }
+    }
 
 
+    //update
     async updateOneCustomer(user,update){
         try {
             let newRecord = await customerModel.updateOne(user,update)
@@ -128,8 +170,27 @@ class DatabaseMongoose {
             console.log(e.message)
         }
     }
+    async updateOneState(state,update){
+        try {
+            let newRecord = await stateModel.updateOne(state,update)
+            return [newRecord,true];
+        }
+        catch (e) {
+            return [e.message,false];
+        }
+    }
+    async updateOneCity(city,update){
+        try {
+            let newRecord = await cityModel.updateOne(city,update)
+            return [newRecord,true];
+        }
+        catch (e) {
+            return [e.message,false];
+        }
+    }
+    
 
-
+    //delete
     async deleteOneCred(cred){
         try {
             let newRecord = await credModel.deleteOne(cred);
@@ -141,7 +202,7 @@ class DatabaseMongoose {
     }
 
 
-
+    //getall
     async getAllCustomers() {
         try{
             let record = await customerModel.find().populate("credential");
@@ -165,6 +226,16 @@ class DatabaseMongoose {
     async getAllAgent() {
         try{
             let record = await agentModel.find().populate("credential");
+            return record;
+        }
+        catch (e) {
+            console.log(e.message)
+        }
+        
+    }
+    async getAllState() {
+        try{
+            let record = await stateModel.find().populate("city");
             return record;
         }
         catch (e) {
