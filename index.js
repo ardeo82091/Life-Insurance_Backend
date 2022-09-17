@@ -124,7 +124,7 @@ app.post("/api/v1/deleteState", async(req,resp) =>
 app.post("/api/v1/createCity", async(req,resp) =>
   createCity(req, resp)  
 );
-app.get("/api/v1/getAllCity", async(req,resp) =>
+app.post("/api/v1/getAllCity", async(req,resp) =>
   getAllCity(req, resp)  
 );
 app.put("/api/v1/updateCity", async(req,resp) =>

@@ -1,20 +1,20 @@
 const {DatabaseMongoose} = require('../repository/database');
 
 class State{
-    constructor(stateName)
+    constructor(stateName,isActive)
     {
         this.stateName = stateName;
         this.city      = [];
-        this.isActive  = true; 
+        this.isActive  = isActive; 
     }
 
-    static async createNewState(stateName)
+    static async createNewState(stateName,isActive)
     {
         const db = new DatabaseMongoose();
         let findState = await db.findOneState({"stateName":stateName});
         if(!findState)
         {
-            await db.insertOneState(new State(stateName));
+            await db.insertOneState(new State(stateName,isActive));
             return [true,"State Created SuccessFully"];
         }
         return [false,"State Already Existed"];
@@ -50,6 +50,10 @@ class State{
         let [state, isStateExist] = await State.findState(statetoUpdate);
         if (!isStateExist) {
           return [false, "Not find the State to Update"];
+        }
+        let [StateName, isStateNameExist] = await State.findState(value);
+        if (isStateNameExist) {
+          return [false, "StateName is Already Exists Please mention other StateName"];
         }
         let [record,isUpdate] = await db.updateOneState(
                                            {_id: state._id},

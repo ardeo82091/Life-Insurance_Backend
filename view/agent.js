@@ -103,6 +103,11 @@ class Agent{
                 return [true,"Updated"];
 
             case "UserName":
+                let UserNameExist = await db.findOneCred({userName:value});
+                if(UserNameExist)
+                {
+                    return [false,"UserName ALready Exists"];
+                }
                 await db.updateOneCred(
                     {_id:dUser.credential},
                     {$set:{userName:value}}

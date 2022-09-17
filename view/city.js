@@ -1,12 +1,12 @@
 const {DatabaseMongoose} = require('../repository/database');
 class City{
-    constructor(cityName)
+    constructor(cityName,isActive)
     {
         this.cityName  = cityName;
-        this.isActive  = true; 
+        this.isActive  = isActive; 
     }
 
-    static async createNewCity(stateName,cityName)
+    static async createNewCity(stateName,cityName,isActive)
     {
         const db = new DatabaseMongoose();
         let findState = await db.findOneState({"stateName":stateName});
@@ -18,7 +18,7 @@ class City{
         if(isCityExists){
             return [false,`This city already exist in state :${stateName}`];
         }
-        let newCity = await db.insertOneCity(new City(cityName));
+        let newCity = await db.insertOneCity(new City(cityName,isActive));
         await db.updateOneState({_id:findState._id},{$push:{"city":newCity}})
         return [true,"City Created SuccessFully"];
     }
@@ -38,6 +38,7 @@ class City{
         {
             let indexOfCity = findState.city[index];
             let findCity    = await db.findOneCity({"_id":indexOfCity});
+            console.log(findCity)
             if (findCity.cityName == cityName){
                 return [findCity,true]
             }
@@ -86,6 +87,10 @@ class City{
         let findCity = await db.findOneCity({"cityName":citytoUpdate});
         if(!findCity){
             return [false,"City not exists"];
+        }
+        let findCityName = await db.findOneCity({"cityName":value});
+        if(findCityName){
+            return [false,"CityName already exists"];
         }
         let [record,isUpdate] = await db.updateOneCity(
                                            {_id: findCity._id},

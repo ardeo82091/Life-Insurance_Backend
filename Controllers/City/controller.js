@@ -15,7 +15,7 @@ async function createCity(req, resp) {
     resp.status(401).send(`${newPayload.firstName} is Inactive`);
     return;
   }
-  const  {stateName,cityName}  = req.body;
+  const  {stateName,cityName,isActive}  = req.body;
   if(typeof(cityName) != "string")
   {
     return resp.status(403).send("Require cityName to Create New City");
@@ -24,9 +24,14 @@ async function createCity(req, resp) {
   {
     return resp.status(403).send("Require stateName to Create New City");
   }
+  if(typeof(isActive) != "boolean")
+  {
+    return resp.status(403).send("Require isActive field Create New City");
+  }
   const [isCityCreated, msz] = await City.createNewCity(
     stateName,
-    cityName
+    cityName,
+    isActive
   );
   if (!isCityCreated) {
     resp.status(403).send(msz);

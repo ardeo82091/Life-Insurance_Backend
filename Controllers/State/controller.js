@@ -15,13 +15,18 @@ async function createState(req, resp) {
     resp.status(401).send(`${newPayload.firstName} is Inactive`);
     return;
   }
-  const { stateName } = req.body;
+  const { stateName,isActive } = req.body;
   if(typeof(stateName) != "string")
   {
     return resp.status(403).send("Require stateName to Create New State");
   }
+  if(typeof(isActive) != "boolean")
+  {
+    return resp.status(403).send("Require isActive field to Create New State");
+  }
   const [isStateCreated, msz] = await State.createNewState(
-    stateName
+    stateName,
+    isActive
   );
   if (!isStateCreated) {
     resp.status(403).send(msz);
