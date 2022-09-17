@@ -23,6 +23,7 @@ class City{
         return [true,"City Created SuccessFully"];
     }
 
+    //find City with stateName
     static async findCity(stateName,cityName) {
         const db = new DatabaseMongoose();
         let findState = await db.findOneState({"stateName":stateName});
@@ -38,7 +39,6 @@ class City{
         {
             let indexOfCity = findState.city[index];
             let findCity    = await db.findOneCity({"_id":indexOfCity});
-            console.log(findCity)
             if (findCity.cityName == cityName){
                 return [findCity,true]
             }
@@ -46,6 +46,7 @@ class City{
         return [null, false];
     }
 
+    //find City without stateName
     static async findCityWState(cityName){
         const db = new DatabaseMongoose();
         let findCity = await db.findOneCity({cityName:cityName});

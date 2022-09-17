@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
-const customerModel = require('../model/customer')
-const employeeModel = require('../model/employee')
-const credModel = require('../model/credential')
-const agentModel = require('../model/agent')
-const stateModel = require('../model/state')
-const cityModel = require('../model/city')
+const customerModel = require('../model/customer');
+const employeeModel = require('../model/employee');
+const credModel = require('../model/credential');
+const agentModel = require('../model/agent');
+const stateModel = require('../model/state');
+const cityModel = require('../model/city');
+const insuranceTypeModel = require('../model/insuranceType');
+const insuranceSchemeModel = require('../model/insuranceScheme');
+
 class DatabaseMongoose {
     constructor() {
         this._connect()
@@ -74,6 +77,24 @@ class DatabaseMongoose {
             return e.message;
         }
     }
+    async insertOneInsuranceType(insuranceType) {
+        try {
+            let newRecord = await insuranceTypeModel.create(insuranceType)
+            return [newRecord,true];
+        }
+        catch (e) {
+            return [e.message,false];
+        }
+    }
+    async insertOneInsuranceScheme(insuranceScheme) {
+        try {
+            let newRecord = await insuranceSchemeModel.create(insuranceScheme)
+            return newRecord;
+        }
+        catch (e) {
+            return e.message;
+        }
+    }
 
 
     //find
@@ -125,6 +146,24 @@ class DatabaseMongoose {
     async findOneCity(city){
         try {
             let newRecord = await cityModel.findOne(city);
+            return newRecord;
+        }
+        catch (e) {
+            console.log(e.message);
+        }
+    }
+    async findOneInsuranceType(insuranceType){
+        try {
+            let newRecord = await insuranceTypeModel.findOne(insuranceType);
+            return newRecord;
+        }
+        catch (e) {
+            console.log(e.message);
+        }
+    }
+    async findOneInsuranceScheme(insuranceScheme){
+        try {
+            let newRecord = await insuranceSchemeModel.findOne(insuranceScheme);
             return newRecord;
         }
         catch (e) {
@@ -188,6 +227,24 @@ class DatabaseMongoose {
             return [e.message,false];
         }
     }
+    async updateOneInsuranceScheme(insuranceScheme,update){
+        try {
+            let newRecord = await insuranceSchemeModel.updateOne(insuranceScheme,update)
+            return [newRecord,true];
+        }
+        catch (e) {
+            return [e.message,false];
+        }
+    }
+    async updateOneInsuranceType(insuranceType,update){
+        try {
+            let newRecord = await insuranceTypeModel.updateOne(insuranceType,update)
+            return [newRecord,true];
+        }
+        catch (e) {
+            return [e.message,false];
+        }
+    }
     
 
     //delete
@@ -243,6 +300,17 @@ class DatabaseMongoose {
         }
         
     }
+    async getAllInsuranceType() {
+        try{
+            let record = await insuranceTypeModel.find().populate("insuranceScheme");
+            return record;
+        }
+        catch (e) {
+            return e.message;
+        }
+        
+    }
+ 
 }
 
 

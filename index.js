@@ -47,8 +47,21 @@ const {
   deleteCity,
 } = require("./Controllers/City/controller.js");
 
-const {logout} = require("./Controllers/Logout/controller.js")
+const { 
+  createInsuranceType, 
+  getAllInsuranceType, 
+  updateInsuranceType, 
+  deleteInsuranceType 
+} = require("./Controllers/InsuranceType/controller");
 
+const { 
+  createInsuranceScheme, 
+  getAllInsuranceScheme, 
+  updateInsuranceScheme, 
+  deleteInsuranceScheme 
+} = require("./Controllers/InsuranceScheme/controller");
+
+const {logout} = require("./Controllers/Logout/controller.js");
 
 
 app.post("/api/v1/login", async (req, resp) => login(req, resp));
@@ -134,6 +147,34 @@ app.post("/api/v1/deleteCity", async(req,resp) =>
   deleteCity(req, resp)  
 );
 
+//Insurance Type
+app.post("/api/v1/createInsuranceType", async(req,resp) =>
+  createInsuranceType(req, resp)  
+);
+app.get("/api/v1/getAllInsuranceType", async(req,resp) =>
+  getAllInsuranceType(req, resp)  
+);
+app.put("/api/v1/updateInsuranceType", async(req,resp) =>
+  updateInsuranceType(req, resp)  
+);
+app.post("/api/v1/deleteInsuranceType", async(req,resp) =>
+  deleteInsuranceType(req, resp)  
+);
+
+//Insurance Scheme
+app.post("/api/v1/createInsuranceScheme", async(req,resp) =>
+  createInsuranceScheme(req, resp)  
+);
+app.post("/api/v1/getAllInsuranceScheme", async(req,resp) =>
+  getAllInsuranceScheme(req, resp)  
+);
+app.put("/api/v1/updateInsuranceScheme", async(req,resp) =>
+  updateInsuranceScheme(req, resp)  
+);
+app.post("/api/v1/deleteInsuranceScheme", async(req,resp) =>
+  deleteInsuranceScheme(req, resp)  
+);
+
 
 //logout
 app.post("/api/v1/logout", (req,resp) =>logout(req,resp));
@@ -144,3 +185,7 @@ app.listen(8082, async () => {
   //await createAdmin();
   console.log("app is started at port 8082");
 });
+
+
+
+
