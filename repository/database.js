@@ -5,6 +5,7 @@ const credModel = require('../model/credential');
 const agentModel = require('../model/agent');
 const stateModel = require('../model/state');
 const cityModel = require('../model/city');
+const queryModel = require('../model/query');
 const insuranceTypeModel = require('../model/insuranceType');
 const insuranceSchemeModel = require('../model/insuranceScheme');
 
@@ -95,6 +96,15 @@ class DatabaseMongoose {
             return e.message;
         }
     }
+    async insertOneQuery(query) {
+        try {
+            let newRecord = await queryModel.create(query)
+            return newRecord;
+        }
+        catch (e) {
+            return e.message;
+        }
+    }
 
 
     //find
@@ -164,6 +174,15 @@ class DatabaseMongoose {
     async findOneInsuranceScheme(insuranceScheme){
         try {
             let newRecord = await insuranceSchemeModel.findOne(insuranceScheme);
+            return newRecord;
+        }
+        catch (e) {
+            console.log(e.message);
+        }
+    }
+    async findOneQuery(query){
+        try {
+            let newRecord = await queryModel.findOne(query);
             return newRecord;
         }
         catch (e) {
@@ -245,12 +264,30 @@ class DatabaseMongoose {
             return [e.message,false];
         }
     }
+    async updateOneQuery(query,update){
+        try {
+            let newRecord = await queryModel.updateOne(query,update)
+            return newRecord;
+        }
+        catch (e) {
+            return e.message;
+        }
+    }
     
 
     //delete
     async deleteOneCred(cred){
         try {
             let newRecord = await credModel.deleteOne(cred);
+            return newRecord
+        }
+        catch (e) {
+            console.log(e.message)
+        }
+    }
+    async deleteOneQuery(query){
+        try {
+            let newRecord = await queryModel.deleteOne(query);
             return newRecord
         }
         catch (e) {
@@ -303,6 +340,16 @@ class DatabaseMongoose {
     async getAllInsuranceType() {
         try{
             let record = await insuranceTypeModel.find().populate("insuranceScheme");
+            return record;
+        }
+        catch (e) {
+            return e.message;
+        }
+        
+    }
+    async getAllQuery() {
+        try{
+            let record = await queryModel.find();
             return record;
         }
         catch (e) {

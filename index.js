@@ -61,6 +61,14 @@ const {
   deleteInsuranceScheme 
 } = require("./Controllers/InsuranceScheme/controller");
 
+const {
+  createQuery,
+  getAllQuery,
+  replytQuery,
+  updateQuery,
+  deleteQuery
+} = require("./Controllers/Query/controller");
+
 const {logout} = require("./Controllers/Logout/controller.js");
 
 
@@ -175,6 +183,22 @@ app.post("/api/v1/deleteInsuranceScheme", async(req,resp) =>
   deleteInsuranceScheme(req, resp)  
 );
 
+//Query
+app.post("/api/v1/createQuery/:customerName", async(req,resp) =>
+  createQuery(req, resp)  
+);
+app.put("/api/v1/updateQuery/:customerName", async(req,resp) =>
+  updateQuery(req, resp)  
+);
+app.post("/api/v1/replytQuery", async(req,resp) =>
+  replytQuery(req, resp)  
+);
+app.get("/api/v1/getAllQuery", async(req,resp) =>
+  getAllQuery(req, resp)  
+);
+app.delete("/api/v1/deleteQuery", async(req,resp) =>
+  deleteQuery(req, resp)  
+);
 
 //logout
 app.post("/api/v1/logout", (req,resp) =>logout(req,resp));
