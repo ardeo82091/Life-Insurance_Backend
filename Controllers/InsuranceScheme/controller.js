@@ -1,12 +1,13 @@
 const InsuranceScheme = require("../../view/insuranceScheme.js");
-const JWTPayload      = require("../../view/authentication.js");
+const JWTPayload = require("../../view/authentication.js");
 
-async function createInsuranceScheme(req, resp) {
+async function createInsuranceScheme(req, resp, image) {
   const newPayload = JWTPayload.isValidateToken(
     req,
     resp,
     req.cookies["mytoken"]
   );
+
   if (newPayload.role != "admin") {
     resp.status(401).send("please specify this role to admin");
     return;
@@ -15,94 +16,111 @@ async function createInsuranceScheme(req, resp) {
     resp.status(401).send(`${newPayload.firstName} is Inactive`);
     return;
   }
-  const { 
+  let {
     insuranceType,
     insuranceScheme,
-    image,
+
     commissionNewReg,
     commissionInstall,
     insuranceNote,
     minTermPlan,
     maxTermPlan,
-    minAge ,
-    maxAge ,
+    minAge,
+    maxAge,
     minInvestment,
     maxInvestment,
     profitRatio,
-    isActive 
+    isActive,
   } = req.body;
-  if(typeof(insuranceType) != "string")
-  {
-    return resp.status(403).send("Require Insurance Type to Create New Insurance Scheme");
+  isActive == "true" ? (isActive = true) : (isActive = false);
+  if (typeof insuranceType != "string") {
+    return resp
+      .status(403)
+      .send("Require Insurance Type to Create New Insurance Scheme");
   }
-  if(typeof(insuranceScheme) != "string")
-  {
-    return resp.status(403).send("Require Insurance Scheme to Create New Insurance Scheme");
+  if (typeof insuranceScheme != "string") {
+    return resp
+      .status(403)
+      .send("Require Insurance Scheme to Create New Insurance Scheme");
   }
-  if(typeof(image) != "string")
-  {
-    return resp.status(403).send("Require image to Create New Insurance Scheme");
+  if (typeof image === null) {
+    return resp
+      .status(403)
+      .send("Require image to Create New Insurance Scheme");
   }
-  if(typeof(commissionNewReg) != "number")
-  {
-    return resp.status(403).send("Require commissionNewReg Type to Create New Insurance Scheme");
+  if (typeof commissionNewReg != "number") {
+    return resp
+      .status(403)
+      .send("Require commissionNewReg Type to Create New Insurance Scheme");
   }
-  if(typeof(commissionInstall) != "number")
-  {
-    return resp.status(403).send("Require commissionInstall Type to Create New Insurance Scheme");
+  if (typeof commissionInstall != "number") {
+    return resp
+      .status(403)
+      .send("Require commissionInstall Type to Create New Insurance Scheme");
   }
-  if(typeof(insuranceNote) != "string")
-  {
-    return resp.status(403).send("Require insuranceNote to Create New Insurance Scheme");
+  if (typeof insuranceNote != "string") {
+    return resp
+      .status(403)
+      .send("Require insuranceNote to Create New Insurance Scheme");
   }
-  if(typeof(minTermPlan) != "number")
-  {
-    return resp.status(403).send("Require minTermPlan to Create New Insurance Scheme");
+  if (typeof minTermPlan != "number") {
+    return resp
+      .status(403)
+      .send("Require minTermPlan to Create New Insurance Scheme");
   }
-  if(typeof(maxTermPlan) != "number")
-  {
-    return resp.status(403).send("Require maxTermPlan to Create New Insurance Scheme");
+  if (typeof maxTermPlan != "number") {
+    return resp
+      .status(403)
+      .send("Require maxTermPlan to Create New Insurance Scheme");
   }
-  if(typeof(minAge) != "number")
-  {
-    return resp.status(403).send("Require minAge to Create New Insurance Scheme");
+  if (typeof minAge != "number") {
+    return resp
+      .status(403)
+      .send("Require minAge to Create New Insurance Scheme");
   }
-  if(typeof(maxAge) != "number")
-  {
-    return resp.status(403).send("Require maxAge to Create New Insurance Scheme");
+  if (typeof maxAge != "number") {
+    return resp
+      .status(403)
+      .send("Require maxAge to Create New Insurance Scheme");
   }
-  if(typeof(minInvestment) != "number")
-  {
-    return resp.status(403).send("Require minInvestment to Create New Insurance Scheme");
+  if (typeof minInvestment != "number") {
+    return resp
+      .status(403)
+      .send("Require minInvestment to Create New Insurance Scheme");
   }
-  if(typeof(maxInvestment) != "number")
-  {
-    return resp.status(403).send("Require maxInvestment to Create New Insurance Scheme");
+  if (typeof maxInvestment != "number") {
+    return resp
+      .status(403)
+      .send("Require maxInvestment to Create New Insurance Scheme");
   }
-  if(typeof(profitRatio) != "number")
-  {
-    return resp.status(403).send("Require profitRatio to Create New Insurance Scheme");
+  if (typeof profitRatio != "number") {
+    return resp
+      .status(403)
+      .send("Require profitRatio to Create New Insurance Scheme");
   }
-  if(typeof(isActive) != "boolean")
-  {
-    return resp.status(403).send("Require isActive field to Create New Insurance Scheme");
+  if (typeof isActive != "boolean") {
+    return resp
+      .status(403)
+      .send("Require isActive field to Create New Insurance Scheme");
   }
-  const [isInsuranceSchemeCreated, msz] = await InsuranceScheme.createNewInsuranceScheme(
-    insuranceType,
-    insuranceScheme,
-    image,
-    commissionNewReg,
-    commissionInstall,
-    insuranceNote,
-    minTermPlan,
-    maxTermPlan,
-    minAge ,
-    maxAge ,
-    minInvestment,
-    maxInvestment,
-    profitRatio,
-    isActive 
-  );
+  console.log(insuranceType);
+  const [isInsuranceSchemeCreated, msz] =
+    await InsuranceScheme.createNewInsuranceScheme(
+      insuranceType,
+      insuranceScheme,
+      image,
+      commissionNewReg,
+      commissionInstall,
+      insuranceNote,
+      minTermPlan,
+      maxTermPlan,
+      minAge,
+      maxAge,
+      minInvestment,
+      maxInvestment,
+      profitRatio,
+      isActive
+    );
   if (!isInsuranceSchemeCreated) {
     resp.status(403).send(msz);
     return;
@@ -123,12 +141,12 @@ async function getAllInsuranceScheme(req, resp) {
     return;
   }
   const insuranceType = req.body.insuranceType;
-  if(typeof(insuranceType) != "string")
-  {
+  if (typeof insuranceType != "string") {
     return resp.status(403).send("Require insranceType to Get all Cities");
   }
-  let [allInsuranceScheme,allInsuranceSchemelength] = await InsuranceScheme.allInsuranceScheme(insuranceType);
-  if (allInsuranceSchemelength==false) {
+  let [allInsuranceScheme, allInsuranceSchemelength] =
+    await InsuranceScheme.allInsuranceScheme(insuranceType);
+  if (allInsuranceSchemelength == false) {
     return resp.status(403).send("No InsuranceScheme Exist");
   }
   resp.status(201).send(allInsuranceScheme);
@@ -149,17 +167,18 @@ async function updateInsuranceScheme(req, resp) {
     resp.status(401).send(`${newPayload.firstName} is Inactive`);
     return;
   }
-  const {schemetoUpdate,propertyToUpdate,value } = req.body;
-  if(typeof(schemetoUpdate) != "string")
-  {
-    return resp.status(403).send("Require schemetoUpdate to Update Insurance Scheme");
+  const { schemetoUpdate, propertyToUpdate, value } = req.body;
+  if (typeof schemetoUpdate != "string") {
+    return resp
+      .status(403)
+      .send("Require schemetoUpdate to Update Insurance Scheme");
   }
-  if(typeof(propertyToUpdate) != "string")
-  {
-    return resp.status(403).send("Require propertyToUpdate to Update Insurance Scheme");
+  if (typeof propertyToUpdate != "string") {
+    return resp
+      .status(403)
+      .send("Require propertyToUpdate to Update Insurance Scheme");
   }
-  if(typeof(value) != "number")
-  {
+  if (typeof value != "number") {
     return resp.status(403).send("Require value to Update Insurance Scheme");
   }
   const [isUpdate, msz] = await InsuranceScheme.updateInsScheme(
@@ -186,13 +205,13 @@ async function deleteInsuranceScheme(req, resp) {
     return;
   }
   const insuranceScheme = req.body.insuranceScheme;
-  if(typeof(insuranceScheme) != "string")
-  {
-    return resp.status(403).send("Require insuranceScheme to Delete Insurance Scheme");
+  if (typeof insuranceScheme != "string") {
+    return resp
+      .status(403)
+      .send("Require insuranceScheme to Delete Insurance Scheme");
   }
-  let [findInsScheme, isInsSchemeExist] = await InsuranceScheme.findInsSchemeWInsType(
-    insuranceScheme
-  );
+  let [findInsScheme, isInsSchemeExist] =
+    await InsuranceScheme.findInsSchemeWInsType(insuranceScheme);
   if (!isInsSchemeExist) {
     resp.status(403).send("Insurance Scheme not Found");
     return;
@@ -200,7 +219,10 @@ async function deleteInsuranceScheme(req, resp) {
   findInsScheme.isActive == true
     ? (findInsScheme.isActive = false)
     : (findInsScheme.isActive = true);
-  await InsuranceScheme.updateInsSchemeActive(findInsScheme.isActive, findInsScheme._id);
+  await InsuranceScheme.updateInsSchemeActive(
+    findInsScheme.isActive,
+    findInsScheme._id
+  );
   resp.status(201).send("Updated");
   return;
 }

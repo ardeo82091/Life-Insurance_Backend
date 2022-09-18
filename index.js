@@ -6,7 +6,8 @@ const cookieParser = require("cookie-parser");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+const fs = require("fs");
+const multer = require("multer");
 const { login } = require("./Controllers/Login/controller");
 const {
   createCustomer,
@@ -47,18 +48,18 @@ const {
   deleteCity,
 } = require("./Controllers/City/controller.js");
 
-const { 
-  createInsuranceType, 
-  getAllInsuranceType, 
-  updateInsuranceType, 
-  deleteInsuranceType 
+const {
+  createInsuranceType,
+  getAllInsuranceType,
+  updateInsuranceType,
+  deleteInsuranceType,
 } = require("./Controllers/InsuranceType/controller");
 
-const { 
-  createInsuranceScheme, 
-  getAllInsuranceScheme, 
-  updateInsuranceScheme, 
-  deleteInsuranceScheme 
+const {
+  createInsuranceScheme,
+  getAllInsuranceScheme,
+  updateInsuranceScheme,
+  deleteInsuranceScheme,
 } = require("./Controllers/InsuranceScheme/controller");
 
 const {
@@ -66,14 +67,12 @@ const {
   getAllQuery,
   replytQuery,
   updateQuery,
-  deleteQuery
+  deleteQuery,
 } = require("./Controllers/Query/controller");
 
-const {logout} = require("./Controllers/Logout/controller.js");
-
+const { logout } = require("./Controllers/Logout/controller.js");
 
 app.post("/api/v1/login", async (req, resp) => login(req, resp));
-
 
 //Employee
 app.post("/api/v1/createEmployee", async (req, resp) =>
@@ -109,17 +108,10 @@ app.post("/api/v1/deleteCustomer/:userName", async (req, resp) =>
   deleteCustomer(req, resp)
 );
 
-
 //Agent
-app.post("/api/v1/createAgent", async (req, resp) =>
-  createAgent(req, resp)
-);
-app.post("/api/v1/getAllAgent", async (req, resp) =>
-  getAllAgent(req, resp)
-);
-app.get("/api/v1/numberOfAgent", async (req, resp) =>
-  noOfAgent(req, resp)
-);
+app.post("/api/v1/createAgent", async (req, resp) => createAgent(req, resp));
+app.post("/api/v1/getAllAgent", async (req, resp) => getAllAgent(req, resp));
+app.get("/api/v1/numberOfAgent", async (req, resp) => noOfAgent(req, resp));
 app.put("/api/v1/updateAgent/:userName", async (req, resp) =>
   updateAgent(req, resp)
 );
@@ -128,88 +120,82 @@ app.post("/api/v1/deleteAgent/:userName", async (req, resp) =>
 );
 
 //State
-app.post("/api/v1/createState", async(req,resp) =>
-  createState(req, resp)  
-);
-app.get("/api/v1/getAllState", async(req,resp) =>
-  getAllState(req, resp)  
-);
-app.put("/api/v1/updateState", async(req,resp) =>
-  updateState(req, resp)  
-);
-app.post("/api/v1/deleteState", async(req,resp) =>
-  deleteState(req, resp)  
-);
+app.post("/api/v1/createState", async (req, resp) => createState(req, resp));
+app.get("/api/v1/getAllState", async (req, resp) => getAllState(req, resp));
+app.put("/api/v1/updateState", async (req, resp) => updateState(req, resp));
+app.post("/api/v1/deleteState", async (req, resp) => deleteState(req, resp));
 
 //City
-app.post("/api/v1/createCity", async(req,resp) =>
-  createCity(req, resp)  
-);
-app.post("/api/v1/getAllCity", async(req,resp) =>
-  getAllCity(req, resp)  
-);
-app.put("/api/v1/updateCity", async(req,resp) =>
-  updateCity(req, resp)  
-);
-app.post("/api/v1/deleteCity", async(req,resp) =>
-  deleteCity(req, resp)  
-);
+app.post("/api/v1/createCity", async (req, resp) => createCity(req, resp));
+app.post("/api/v1/getAllCity", async (req, resp) => getAllCity(req, resp));
+app.put("/api/v1/updateCity", async (req, resp) => updateCity(req, resp));
+app.post("/api/v1/deleteCity", async (req, resp) => deleteCity(req, resp));
 
 //Insurance Type
-app.post("/api/v1/createInsuranceType", async(req,resp) =>
-  createInsuranceType(req, resp)  
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+app.post(
+  "/api/v1/createInsuranceType",
+  upload.single("testImage"),
+
+  async (req, resp) => {
+    let image = fs.readFileSync("uploads/" + req.file.filename);
+
+    createInsuranceType(req, resp, image);
+  }
 );
-app.get("/api/v1/getAllInsuranceType", async(req,resp) =>
-  getAllInsuranceType(req, resp)  
+app.get("/api/v1/getAllInsuranceType", async (req, resp) =>
+  getAllInsuranceType(req, resp)
 );
-app.put("/api/v1/updateInsuranceType", async(req,resp) =>
-  updateInsuranceType(req, resp)  
+app.put("/api/v1/updateInsuranceType", async (req, resp) =>
+  updateInsuranceType(req, resp)
 );
-app.post("/api/v1/deleteInsuranceType", async(req,resp) =>
-  deleteInsuranceType(req, resp)  
+app.post("/api/v1/deleteInsuranceType", async (req, resp) =>
+  deleteInsuranceType(req, resp)
 );
 
 //Insurance Scheme
-app.post("/api/v1/createInsuranceScheme", async(req,resp) =>
-  createInsuranceScheme(req, resp)  
+app.post(
+  "/api/v1/createInsuranceScheme",
+  upload.single("testImage"),
+  async (req, resp) => {
+    let image = fs.readFileSync("uploads/" + req.file.filename);
+    createInsuranceScheme(req, resp, image);
+  }
 );
-app.post("/api/v1/getAllInsuranceScheme", async(req,resp) =>
-  getAllInsuranceScheme(req, resp)  
+app.post("/api/v1/getAllInsuranceScheme", async (req, resp) =>
+  getAllInsuranceScheme(req, resp)
 );
-app.put("/api/v1/updateInsuranceScheme", async(req,resp) =>
-  updateInsuranceScheme(req, resp)  
+app.put("/api/v1/updateInsuranceScheme", async (req, resp) =>
+  updateInsuranceScheme(req, resp)
 );
-app.post("/api/v1/deleteInsuranceScheme", async(req,resp) =>
-  deleteInsuranceScheme(req, resp)  
+app.post("/api/v1/deleteInsuranceScheme", async (req, resp) =>
+  deleteInsuranceScheme(req, resp)
 );
 
 //Query
-app.post("/api/v1/createQuery/:customerName", async(req,resp) =>
-  createQuery(req, resp)  
+app.post("/api/v1/createQuery/:customerName", async (req, resp) =>
+  createQuery(req, resp)
 );
-app.put("/api/v1/updateQuery/:customerName", async(req,resp) =>
-  updateQuery(req, resp)  
+app.put("/api/v1/updateQuery/:customerName", async (req, resp) =>
+  updateQuery(req, resp)
 );
-app.post("/api/v1/replytQuery", async(req,resp) =>
-  replytQuery(req, resp)  
-);
-app.get("/api/v1/getAllQuery", async(req,resp) =>
-  getAllQuery(req, resp)  
-);
-app.delete("/api/v1/deleteQuery", async(req,resp) =>
-  deleteQuery(req, resp)  
-);
+app.post("/api/v1/replytQuery", async (req, resp) => replytQuery(req, resp));
+app.get("/api/v1/getAllQuery", async (req, resp) => getAllQuery(req, resp));
+app.delete("/api/v1/deleteQuery", async (req, resp) => deleteQuery(req, resp));
 
 //logout
-app.post("/api/v1/logout", (req,resp) =>logout(req,resp));
-
-
+app.post("/api/v1/logout", (req, resp) => logout(req, resp));
 
 app.listen(8082, async () => {
   //await createAdmin();
   console.log("app is started at port 8082");
 });
-
-
-
-

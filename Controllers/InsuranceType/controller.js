@@ -1,7 +1,7 @@
-const InsuranceType = require("../../view/insuranceType")
+const InsuranceType = require("../../view/insuranceType");
 const JWTPayload = require("../../view/authentication.js");
 
-async function createInsuranceType(req, resp) {
+async function createInsuranceType(req, resp, image) {
   const newPayload = JWTPayload.isValidateToken(
     req,
     resp,
@@ -15,27 +15,31 @@ async function createInsuranceType(req, resp) {
     resp.status(401).send(`${newPayload.firstName} is Inactive`);
     return;
   }
-  const { 
+  let {
     insuranceType,
-    image,
-    isActive 
+
+    isActive,
   } = req.body;
-  if(typeof(insuranceType) != "string")
-  {
-    return resp.status(403).send("Require insuranceType to Create New InsuranceType");
+
+  isActive == "true" ? (isActive = true) : (isActive = false);
+  if (typeof insuranceType != "string") {
+    return resp
+      .status(403)
+      .send("Require insuranceType to Create New InsuranceType");
   }
-  if(typeof(image) != "string")
-  {
-    return resp.status(403).send("Require image to Create New InsuranceType");
-  }
-  if(typeof(isActive) != "boolean")
-  {
-    return resp.status(403).send("Require isActive field to Create New InsuranceType");
+  // if(typeof(image) != "string")
+  // {
+  //   return resp.status(403).send("Require image to Create New InsuranceType");
+  // }
+  if (typeof isActive != "boolean") {
+    return resp
+      .status(403)
+      .send("Require isActive field to Create New InsuranceType");
   }
   const [isInsTypeCreated, msz] = await InsuranceType.createInsuranceType(
     insuranceType,
     image,
-    isActive 
+    isActive
   );
   if (!isInsTypeCreated) {
     resp.status(403).send(msz);
@@ -60,7 +64,7 @@ async function getAllInsuranceType(req, resp) {
   if (allInsuranceType.length == 0) {
     return resp.status(403).send("No State Exist");
   }
-  resp.status(201).send(allInsuranceType);
+  resp.json(allInsuranceType);
   return;
 }
 
@@ -78,13 +82,13 @@ async function updateInsuranceType(req, resp) {
     resp.status(401).send(`${newPayload.firstName} is Inactive`);
     return;
   }
-  const {insuranceTypetoUpdate,value } = req.body;
-  if(typeof(insuranceTypetoUpdate) != "string")
-  {
-    return resp.status(403).send("Require insuranceTypetoUpdate to Update Insurance Type");
+  const { insuranceTypetoUpdate, value } = req.body;
+  if (typeof insuranceTypetoUpdate != "string") {
+    return resp
+      .status(403)
+      .send("Require insuranceTypetoUpdate to Update Insurance Type");
   }
-  if(typeof(value) != "string")
-  {
+  if (typeof value != "string") {
     return resp.status(403).send("Require value to Update Insurance Type");
   }
   const [isUpdate, msz] = await InsuranceType.updateInsuranceType(
@@ -110,13 +114,13 @@ async function deleteInsuranceType(req, resp) {
     return;
   }
   const insuranceType = req.body.insuranceType;
-  if(typeof(insuranceType) != "string")
-  {
-    return resp.status(403).send("Require insuranceType to Delete InsuranceType");
+  if (typeof insuranceType != "string") {
+    return resp
+      .status(403)
+      .send("Require insuranceType to Delete InsuranceType");
   }
-  let [isInsuranceTypeExists,findInsuranceType] = await InsuranceType.findInsuranceType(
-    insuranceType
-  );
+  let [isInsuranceTypeExists, findInsuranceType] =
+    await InsuranceType.findInsuranceType(insuranceType);
   if (!isInsuranceTypeExists) {
     resp.status(403).send("Insurance Type not Found");
     return;
@@ -124,7 +128,10 @@ async function deleteInsuranceType(req, resp) {
   findInsuranceType.isActive == true
     ? (findInsuranceType.isActive = false)
     : (findInsuranceType.isActive = true);
-  await InsuranceType.updateActiveInsuranceType(findInsuranceType.isActive, findInsuranceType._id);
+  await InsuranceType.updateActiveInsuranceType(
+    findInsuranceType.isActive,
+    findInsuranceType._id
+  );
   resp.status(201).send("Updated");
   return;
 }
@@ -133,5 +140,5 @@ module.exports = {
   createInsuranceType,
   getAllInsuranceType,
   updateInsuranceType,
-  deleteInsuranceType
+  deleteInsuranceType,
 };
