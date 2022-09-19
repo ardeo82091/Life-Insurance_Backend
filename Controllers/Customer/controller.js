@@ -6,8 +6,8 @@ const bcrypt = require('bcrypt');
 
 async function createCustomer(req,resp)
 {
-    const {firstName,lastName,userName,password,dateOfBirth,address,email,state,city,pincode,nominee,nomineeRelation,role,isActive} = req.body;
-    const [isCustomerCreate,msz] = await Customer.createNewCustomer(firstName,lastName,userName,password,dateOfBirth,address,email,state,city,pincode,nominee,nomineeRelation,role,isActive);
+    const {firstName,lastName,userName,password,dateOfBirth,address,email,stateName,cityName,pincode,nominee,nomineeRelation} = req.body;
+    const [isCustomerCreate,msz] = await Customer.createNewCustomer(firstName,lastName,userName,password,dateOfBirth,address,email,stateName,cityName,pincode,nominee,nomineeRelation);
     if(!isCustomerCreate)
     {
         resp.status(403).send(msz);
@@ -59,7 +59,7 @@ async function updateCustomer(req,resp)
 {
     let userName = req.params.userName;
     let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
-    if(newPayload.role != "customer" && newPayload.role!="employee"){
+    if(newPayload.role != "customer" && newPayload.role!="employee" && newPayload.role!="admin"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
@@ -111,7 +111,7 @@ async function deleteCustomer (req,resp)
 {
     let userName = req.params.userName;
     const newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
-    if(newPayload.role != "customer" && newPayload.role!="employee"){
+    if(newPayload.role != "customer" && newPayload.role!="employee" && newPayload.role!="admin"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }

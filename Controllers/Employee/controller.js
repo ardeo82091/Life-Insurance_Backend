@@ -150,6 +150,31 @@ async function deleteEmployee(req, resp) {
   return;
 }
 
+async function profile(req,resp){
+  const newPayload = JWTPayload.isValidateToken(
+    req,
+    resp,
+    req.cookies["mytoken"]
+  );
+  if (newPayload.role != "admin") {
+    resp.status(401).send("please specify this role to admin");
+    return;
+  }
+  if (newPayload.isActive == false) {
+    resp.status(401).send(`${newPayload.firstName} is Inactive`);
+    return;
+  }
+  const userName = req.params.userName;
+  const [findEmployee,isEmployeeExist] = await Employee.findEmployee(userName);
+  if(!isEmployeeExist)
+  {
+    resp.status(403).send("Employee not Found");
+    return;
+  }
+  resp.status(201).send(findEmployee);
+  return;
+}
+
 module.exports = {
   createAdmin,
   createEmployee,
@@ -157,4 +182,5 @@ module.exports = {
   noOfEmployee,
   updateEmployee,
   deleteEmployee,
+  profile
 };

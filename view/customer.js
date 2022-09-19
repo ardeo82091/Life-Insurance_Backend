@@ -3,7 +3,7 @@ const {DatabaseMongoose} = require('../repository/database')
 const bcrypt = require("bcrypt");
 class Customer
 {
-    constructor(firstName,lastName,credential,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation,isActive)
+    constructor(firstName,lastName,credential,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation)
     {
         this.firstName         =    firstName;
         this.lastName          =    lastName;
@@ -19,10 +19,10 @@ class Customer
         this.nominee           =    nominee;
         this.policies          =    [];
         this.nomineeRelation   =    nomineeRelation; 
-        this.isActive          =    isActive;
+        this.isActive          =    true;
     }
 
-    static async createNewCustomer(firstName,lastName,userName,password,dob,address,email,state,city,pincode,nominee,nomineeRelation,role,isActive)
+    static async createNewCustomer(firstName,lastName,userName,password,dob,address,email,state,city,pincode,nominee,nomineeRelation)
     {
 
         const [flag,message,newCredential] = await Credentials.createCredential(userName,password);
@@ -32,9 +32,10 @@ class Customer
         }
         let age = Customer.age(dob);
         const db = new DatabaseMongoose();
+        const role = "customer";
         let [dCredential,isCredCreated] = await db.insertOneCred(newCredential);
         let [record,isInserted]=await db.insertOneCustomer(
-            new Customer(firstName,lastName,dCredential._id,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation,isActive)
+            new Customer(firstName,lastName,dCredential._id,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation)
         );
         if(!isInserted)
         {

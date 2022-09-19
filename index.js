@@ -8,6 +8,18 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 const fs = require("fs");
 const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 const { login } = require("./Controllers/Login/controller");
 const {
   createCustomer,
@@ -24,6 +36,7 @@ const {
   noOfEmployee,
   updateEmployee,
   deleteEmployee,
+  profile
 } = require("./Controllers/Employee/controller.js");
 
 const {
@@ -72,52 +85,30 @@ const {
 
 const { logout } = require("./Controllers/Logout/controller.js");
 
+
 app.post("/api/v1/login", async (req, resp) => login(req, resp));
 
 //Employee
-app.post("/api/v1/createEmployee", async (req, resp) =>
-  createEmployee(req, resp)
-);
-app.post("/api/v1/getAllEmployee", async (req, resp) =>
-  getAllEmployee(req, resp)
-);
-app.get("/api/v1/numberOfEmployee", async (req, resp) =>
-  noOfEmployee(req, resp)
-);
-app.put("/api/v1/updateEmployee/:userName", async (req, resp) =>
-  updateEmployee(req, resp)
-);
-app.post("/api/v1/deleteEmployee/:userName", async (req, resp) =>
-  deleteEmployee(req, resp)
-);
+app.post("/api/v1/createEmployee", async (req, resp) =>createEmployee(req, resp));
+app.post("/api/v1/getAllEmployee", async (req, resp) =>getAllEmployee(req, resp));
+app.get("/api/v1/numberOfEmployee", async (req, resp) =>noOfEmployee(req, resp));
+app.put("/api/v1/updateEmployee/:userName", async (req, resp) =>updateEmployee(req, resp));
+app.post("/api/v1/deleteEmployee/:userName", async (req, resp) =>deleteEmployee(req, resp));
+app.get("/api/v1/profile/:userName", async (req, resp) =>profile(req, resp));
 
 //Customer
-app.post("/api/v1/createCustomer", async (req, resp) =>
-  createCustomer(req, resp)
-);
-app.post("/api/v1/getAllCustomer", async (req, resp) =>
-  getAllCustomer(req, resp)
-);
-app.get("/api/v1/numberOfCustomer", async (req, resp) =>
-  noOfCustomer(req, resp)
-);
-app.put("/api/v1/updateCustomer/:userName", async (req, resp) =>
-  updateCustomer(req, resp)
-);
-app.post("/api/v1/deleteCustomer/:userName", async (req, resp) =>
-  deleteCustomer(req, resp)
-);
+app.post("/api/v1/createCustomer", async (req, resp) =>createCustomer(req, resp));
+app.post("/api/v1/getAllCustomer", async (req, resp) =>getAllCustomer(req, resp));
+app.get("/api/v1/numberOfCustomer", async (req, resp) =>noOfCustomer(req, resp));
+app.put("/api/v1/updateCustomer/:userName", async (req, resp) =>updateCustomer(req, resp));
+app.post("/api/v1/deleteCustomer/:userName", async (req, resp) =>deleteCustomer(req, resp));
 
 //Agent
 app.post("/api/v1/createAgent", async (req, resp) => createAgent(req, resp));
 app.post("/api/v1/getAllAgent", async (req, resp) => getAllAgent(req, resp));
 app.get("/api/v1/numberOfAgent", async (req, resp) => noOfAgent(req, resp));
-app.put("/api/v1/updateAgent/:userName", async (req, resp) =>
-  updateAgent(req, resp)
-);
-app.post("/api/v1/deleteAgent/:userName", async (req, resp) =>
-  deleteAgent(req, resp)
-);
+app.put("/api/v1/updateAgent/:userName", async (req, resp) =>updateAgent(req, resp));
+app.post("/api/v1/deleteAgent/:userName", async (req, resp) =>deleteAgent(req, resp));
 
 //State
 app.post("/api/v1/createState", async (req, resp) => createState(req, resp));
@@ -132,35 +123,18 @@ app.put("/api/v1/updateCity", async (req, resp) => updateCity(req, resp));
 app.post("/api/v1/deleteCity", async (req, resp) => deleteCity(req, resp));
 
 //Insurance Type
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
 
-const upload = multer({ storage: storage });
 app.post(
   "/api/v1/createInsuranceType",
   upload.single("testImage"),
-
   async (req, resp) => {
     let image = fs.readFileSync("uploads/" + req.file.filename);
-
     createInsuranceType(req, resp, image);
   }
 );
-app.get("/api/v1/getAllInsuranceType", async (req, resp) =>
-  getAllInsuranceType(req, resp)
-);
-app.put("/api/v1/updateInsuranceType", async (req, resp) =>
-  updateInsuranceType(req, resp)
-);
-app.post("/api/v1/deleteInsuranceType", async (req, resp) =>
-  deleteInsuranceType(req, resp)
-);
+app.get("/api/v1/getAllInsuranceType", async (req, resp) =>getAllInsuranceType(req, resp));
+app.put("/api/v1/updateInsuranceType", async (req, resp) =>updateInsuranceType(req, resp));
+app.post("/api/v1/deleteInsuranceType", async (req, resp) =>deleteInsuranceType(req, resp));
 
 //Insurance Scheme
 app.post(
@@ -171,26 +145,16 @@ app.post(
     createInsuranceScheme(req, resp, image);
   }
 );
-app.post("/api/v1/getAllInsuranceScheme", async (req, resp) =>
-  getAllInsuranceScheme(req, resp)
-);
-app.put("/api/v1/updateInsuranceScheme", async (req, resp) =>
-  updateInsuranceScheme(req, resp)
-);
-app.post("/api/v1/deleteInsuranceScheme", async (req, resp) =>
-  deleteInsuranceScheme(req, resp)
-);
+app.post("/api/v1/getAllInsuranceScheme", async (req, resp) =>getAllInsuranceScheme(req, resp));
+app.put("/api/v1/updateInsuranceScheme", async (req, resp) =>updateInsuranceScheme(req, resp));
+app.post("/api/v1/deleteInsuranceScheme", async (req, resp) =>deleteInsuranceScheme(req, resp));
 
 //Query
-app.post("/api/v1/createQuery/:customerName", async (req, resp) =>
-  createQuery(req, resp)
-);
-app.put("/api/v1/updateQuery/:customerName", async (req, resp) =>
-  updateQuery(req, resp)
-);
+app.post("/api/v1/createQuery/:customerName", async (req, resp) =>createQuery(req, resp));
+app.put("/api/v1/updateQuery/:customerName", async (req, resp) =>updateQuery(req, resp));
 app.post("/api/v1/replytQuery", async (req, resp) => replytQuery(req, resp));
 app.get("/api/v1/getAllQuery", async (req, resp) => getAllQuery(req, resp));
-app.delete("/api/v1/deleteQuery", async (req, resp) => deleteQuery(req, resp));
+app.post("/api/v1/deleteQuery", async (req, resp) => deleteQuery(req, resp));
 
 //logout
 app.post("/api/v1/logout", (req, resp) => logout(req, resp));
