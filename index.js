@@ -83,6 +83,8 @@ const {
   deleteQuery,
 } = require("./Controllers/Query/controller");
 
+const {marketing} =require('./Controllers/Marketing/controller')
+
 const { logout } = require("./Controllers/Logout/controller.js");
 
 
@@ -109,6 +111,7 @@ app.post("/api/v1/getAllAgent", async (req, resp) => getAllAgent(req, resp));
 app.get("/api/v1/numberOfAgent", async (req, resp) => noOfAgent(req, resp));
 app.put("/api/v1/updateAgent/:userName", async (req, resp) =>updateAgent(req, resp));
 app.post("/api/v1/deleteAgent/:userName", async (req, resp) =>deleteAgent(req, resp));
+app.post("/api/v1/marketing", async (req, resp) =>marketing(req, resp));
 
 //State
 app.post("/api/v1/createState", async (req, resp) => createState(req, resp));
@@ -163,3 +166,5 @@ app.listen(8082, async () => {
   //await createAdmin();
   console.log("app is started at port 8082");
 });
+
+
