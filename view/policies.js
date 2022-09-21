@@ -22,21 +22,22 @@ class Policies{
         this.claim                     =  false;
     }
 
-    static async addNewPolicy(userName,insuranceType,insuranceScheme,termPlan,premiumType,totalAmount,)
+    static async addNewPolicy(userName,insuranceType,insuranceScheme,termPlan,premiumType,totalAmount)
     {
         const db = new DatabaseMongoose();
+        let findInsScheme = await db.findOneInsuranceScheme({"insuranceScheme":insuranceScheme});
+        if(!findInsScheme)
+        {
+            return [false,null];
+        }
+        const profitRatio = findInsScheme.profitRatio;
         const createdate = new Date();
         const date =new Date(createdate.getTime());
         const maturityDate = new Date(date.setFullYear(date.getFullYear() + termPlan));
         const interestAmount = totalAmount*(profitRatio/100);;
         const sumAssuredAfterYears = totalAmount+interestAmount;
         const installMentAmount = totalAmount/(termPlan/premiumType);
-        let findInsScheme = await db.findOneInsuranceScheme({"insuranceScheme":insuranceScheme});
-        if(!findInsScheme)
-        {
-            return [null,false];
-        }
-        const profitRatio = findInsScheme.profitRatio;
+        
 
         const installmentDate = new Date(createdate.getTime());
         const installLeft = [];
