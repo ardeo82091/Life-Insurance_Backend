@@ -25,18 +25,23 @@ async function buyNewPolicy(req,resp){
         premiumType,
         totalAmount} = req.body;
 
-    const [isPolicyExist,newPolicy] = await Policies.addNewPolicy(userName,
+    const [isPolicyExist,msz] = await Policies.addNewPolicy(userName,
         insuranceType,
         insuranceScheme,
         termPlan,
         premiumType,
-        totalAmount
+        totalAmount,
+        paymentType,
+        cardHolder,
+        cardNumber,
+        cvvNumber,
+        expireDate
     )
     if(!isPolicyExist){
-        resp.status(403).send("Insurance Scheme Not Exist");
+        resp.status(403).send(msz);
         return;
     }
-    resp.status(201).send(newPolicy);
+    resp.status(201).send(msz);
     return;
 }
 
@@ -63,6 +68,9 @@ async function payInstallment(req,resp){
         cvvNumber,
         expireDate} = req.body;
     const [isPayment,msz] =await  PolicyPayment.createPolicyPayment(
+        userName,
+        accountNo,
+        insuranceScheme,
         installmentLeftId,
         paymentType,
         cardHolder,

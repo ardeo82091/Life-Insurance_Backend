@@ -23,6 +23,7 @@ const CustomerSchema = mongoose.Schema({
     nominee         :  {type:String}, 
     nomineeRelation :  {type:String}, 
     policies        :  {type:[mongoose.SchemaTypes.ObjectId],ref:"ContactDetails"},
+    agentrefer      :  {type:String},
     role            :  {type:String},
     isActive        :  {type:Boolean}
 },{

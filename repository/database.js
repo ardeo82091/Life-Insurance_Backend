@@ -13,6 +13,7 @@ const policyModel = require("../model/policies");
 const installLeftModel = require("../model/installLeft");
 const taxSettingModel = require("../model/taxSetting");
 const insuranceSettingModel = require("../model/insuranceSetting")
+const commisionModel = require("../model/commision");
 
 class DatabaseMongoose {
   constructor() {
@@ -143,6 +144,14 @@ class DatabaseMongoose {
       return e.message;
     }
   }
+  async insertOneCommision(commision){
+    try {
+      let newRecord = await commisionModel.create(commision);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
 
 
 
@@ -223,6 +232,14 @@ class DatabaseMongoose {
   async findOneinstallMentLeft(installLeft) {
     try {
       let newRecord = await installLeftModel.findOne(installLeft);
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  async findOnePolicy(policy) {
+    try {
+      let newRecord = await policyModel.findOne(policy);
       return newRecord;
     } catch (e) {
       console.log(e.message);

@@ -3,7 +3,7 @@ const {DatabaseMongoose} = require('../repository/database')
 const bcrypt = require("bcrypt");
 class Customer
 {
-    constructor(firstName,lastName,credential,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation)
+    constructor(firstName,lastName,credential,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation,agentName)
     {
         this.firstName         =    firstName;
         this.lastName          =    lastName;
@@ -18,11 +18,12 @@ class Customer
         this.pincode           =    pincode;
         this.nominee           =    nominee;
         this.policies          =    [];
+        this.agentrefer        =    agentName;
         this.nomineeRelation   =    nomineeRelation; 
         this.isActive          =    true;
     }
 
-    static async createNewCustomer(firstName,lastName,userName,password,dob,address,email,state,city,pincode,nominee,nomineeRelation)
+    static async createNewCustomer(firstName,lastName,userName,password,dob,address,email,state,city,pincode,nominee,nomineeRelation,agentName)
     {
 
         const [flag,message,newCredential] = await Credentials.createCredential(userName,password);
@@ -91,6 +92,17 @@ class Customer
             return [findCustomer,true];
         }
         return [null,false];
+    }
+
+    static async findPayPolicy(policyId)
+    {
+        const db = new DatabaseMongoose();
+        let record = await db.findOnePolicy(policyId);
+        console.log(record,"[][][][]");
+        if(!record){
+            return [false,null];
+        }
+        return [true,record.installmentLeft[0]];
     }
 
     static async getAllCustomers()

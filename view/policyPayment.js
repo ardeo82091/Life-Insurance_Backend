@@ -1,5 +1,7 @@
 const {DatabaseMongoose} = require('../repository/database');
-
+const PolicyPayment = require('./policyPayment');
+const Customer = require('./customer');
+const Commision = require('./commision');
 class PolicyPayment{
     constructor(date,installmentAmount,penaltyfee,taxAmount,totalPayAmount,paymentType,cardHolder,cardNumber,cvvNumber,expireDate)
     {
@@ -16,6 +18,9 @@ class PolicyPayment{
     }
 
     static async createPolicyPayment (
+        userName,
+        accountNo,
+        insuranceScheme,
         installmentLeftId,
         paymentType,
         cardHolder,
@@ -30,6 +35,16 @@ class PolicyPayment{
         {
             return [false,"installmentLeftId not Exist"]
         }
+        let findInsScheme = await db.findOneInsuranceScheme({"insuranceScheme":insuranceScheme});
+        if(!findInsScheme)
+        {
+            return [false,"Insurance Scheme not found"];
+        }
+        let commisionAmount = (findInsScheme.commissionInstall)/100;
+        if(findinstallMent.installmentNo==0){
+            commisionAmount = (findInsScheme.commissionNewReg)/100;
+        }
+        
         if(findinstallMent.paymentStatus!="Pending"){
             return [false,"Payment Already Done"];
         }
@@ -54,6 +69,19 @@ class PolicyPayment{
         await db.updateOneinstallMentLeft({_id:installmentLeftId},{$set:{policyPayment:policyPayment._id}});
         await db.updateOneinstallMentLeft({_id:installmentLeftId},{$set:{paymentStatus:"Paid"}});
         await db.updateOneinstallMentLeft({_id:installmentLeftId},{$set:{payDate:date}});
+        let [dUser,isUserExist] = await Customer.findCustomer(userName);
+        if(!isUserExist)
+        {
+            return [false,"Customer not Found "];
+        }
+        if(dUser.agentName == null){
+            return [true,"Payment Done"];
+        }
+        
+        const [isCommisonExist,msz1] = Commision.addcommision(accountNo,userName,dUser.agentName,insuranceScheme,commisionAmount);
+        if(!isCommisonExist){
+            return [false,msz1]
+        }
         return [true,"Payment Done"];
     }
     

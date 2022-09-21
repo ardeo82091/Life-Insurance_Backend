@@ -5,14 +5,16 @@ let id =0;
 class Agent{
     constructor(fullName,credential,address,emailId,qualification,role,isActive)
     {
-        this.fullName      =  fullName;
-        this.agentCode     =  "AGNT00"+(id++);
-        this.credential    =  credential;
-        this.address       =  address;
-        this.emailId       =  emailId;
-        this.qualification =  qualification;
-        this.role          =  role;
-        this.isActive      =  isActive;
+        this.fullName              =  fullName;
+        this.agentCode             =  "AGNT00"+(id++);
+        this.credential            =  credential;
+        this.address               =  address;
+        this.emailId               =  emailId;
+        this.qualification         =  qualification;
+        this.role                  =  role;
+        this.commision             =  [];
+        this.totalCommisionAmmount =  0;
+        this.isActive              =  isActive;
     }
 
     static async createNewAgent(
@@ -76,6 +78,23 @@ class Agent{
         const db = new DatabaseMongoose();
         const allAgents = await db.getAllAgent();
         return allAgents;
+    }
+
+    static async updateCommisionAmount(id)
+    {
+        const db = new DatabaseMongoose();
+        const [findAgent,isAgentExists] = await Agent.findAgentId(id);
+        if(!isAgentExists){
+            return false;
+        }
+        let amount = 0;
+        for(let index=0; index<findAgent.commision.length; index++){
+            let indii = findAgent.commision[index];
+            let findComission = await db.findOneCommision(indii);
+            amount += findComission.ommisionAmount;
+        }
+        await db.updateOneAgent({_id:id},{$set:{totalCommisionAmmount:amount}});
+        return true;
     }
 
     static async updateAgentActive(isactive,AgentId)

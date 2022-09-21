@@ -1,4 +1,3 @@
-const {DatabaseMongoose} = require('../repository/database');
 class InstallmentLeft{
     constructor(installmentNo,installmentDate,installmentAmount)
     {
