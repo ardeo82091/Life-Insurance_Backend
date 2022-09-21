@@ -45,6 +45,20 @@ class Customer
         return [true,"New Customer created"];
     }
 
+    static async claimPolicy(policyId,userName){
+        let [dUser,isUserExist] = await Customer.findCustomer(userName);
+        if(!isUserExist){
+            return [false,"Customer not Exist"];
+        }
+        const db = new DatabaseMongoose();
+        const findpolicy = await db.getPolicy(dUser.credential);
+        for(let index = 0; index<findpolicy[0].policies.length; index++)
+        {
+            let findpolicies = await db.findOnepolicy({"_id":findpolicy[0].policies[index]})
+        }
+        return;
+    }
+
     static async findCustomer(userName)
     {
         const db = new DatabaseMongoose();

@@ -8,6 +8,9 @@ const cityModel = require("../model/city");
 const queryModel = require("../model/query");
 const insuranceTypeModel = require("../model/insuranceType");
 const insuranceSchemeModel = require("../model/insuranceScheme");
+const policyPaymentModel = require("../model/policyPayment");
+const policyModel = require("../model/policies");
+const installLeftModel = require("../model/installLeft");
 
 class DatabaseMongoose {
   constructor() {
@@ -98,6 +101,34 @@ class DatabaseMongoose {
       return e.message;
     }
   }
+  async insertOnePolicy(policy) {
+    try {
+      let newRecord = await policyModel.create(policy);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async insertOneinstallMentLeft(installLeft) {
+    try {
+      let newRecord = await installLeftModel.create(installLeft);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async insertOnePolicyPayment(policyPayment) {
+    try {
+      let newRecord = await policyPaymentModel.create(policyPayment);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+
+
+
 
   //find
   async findOneCustomer(user) {
@@ -172,6 +203,18 @@ class DatabaseMongoose {
       console.log(e.message);
     }
   }
+  async findOneinstallMentLeft(installLeft) {
+    try {
+      let newRecord = await installLeftModel.findOne(installLeft);
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
+
+
+
 
   //update
   async updateOneCustomer(user, update) {
@@ -250,6 +293,9 @@ class DatabaseMongoose {
     }
   }
 
+
+
+
   //delete
   async deleteOneCred(cred) {
     try {
@@ -317,6 +363,16 @@ class DatabaseMongoose {
       return e.message;
     }
   }
+  async getPolicy(iD) {
+    try{
+        let record = await customerModel.where("credential").equals(iD).populate("policies.Object");
+        return record;
+    }
+    catch (e) {
+        console.log(e.message)
+    }
+  }
+
 }
 
 module.exports = { DatabaseMongoose };
