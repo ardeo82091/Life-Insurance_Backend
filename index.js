@@ -177,7 +177,16 @@ app.post("/api/v1/deleteQuery", async (req, resp) => deleteQuery(req, resp));
 
 //Policy
 app.post("/api/v1/buyPolicy/:userName", async (req,resp) => buyNewPolicy(req,resp));
-app.post("/api/v1/payInstallment", async (req,resp) => payInstallment(req,resp));
+app.post("/api/v1/payInstallment/:userName", async (req,resp) => payInstallment(req,resp));
+
+
+//Setting
+const {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting} = require("./Controllers/Setting/controller")
+app.post("/api/v1/taxSetting", (req,resp) =>taxSetting(req,resp));
+app.post("/api/v1/insuranceSetting", (req,resp) =>insuranceSetting(req,resp));
+app.post("/api/v1/updatetaxSetting", (req,resp) =>updatetaxSetting(req,resp));
+app.post("/api/v1/updateinsuranceSetting", (req,resp) =>updateinsuranceSetting(req,resp));
+
 
 //logout
 app.post("/api/v1/logout", (req, resp) => logout(req, resp));

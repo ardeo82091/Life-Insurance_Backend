@@ -11,6 +11,8 @@ const insuranceSchemeModel = require("../model/insuranceScheme");
 const policyPaymentModel = require("../model/policyPayment");
 const policyModel = require("../model/policies");
 const installLeftModel = require("../model/installLeft");
+const taxSettingModel = require("../model/taxSetting");
+const insuranceSettingModel = require("../model/insuranceSetting")
 
 class DatabaseMongoose {
   constructor() {
@@ -125,7 +127,22 @@ class DatabaseMongoose {
       return e.message;
     }
   }
-
+  async insertOneTaxPercentage(tax) {
+    try {
+      let newRecord = await taxSettingModel.create(tax);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async insertOneinsuranceSetting(percentage) {
+    try {
+      let newRecord = await insuranceSettingModel.create(percentage);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
 
 
 
@@ -211,6 +228,22 @@ class DatabaseMongoose {
       console.log(e.message);
     }
   }
+  async findOnetaxSetting() {
+    try {
+      let newRecord = await taxSettingModel.find();
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  async findOneinsuranceSetting() {
+    try {
+      let newRecord = await insuranceSettingModel.find();
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
 
 
 
@@ -287,6 +320,30 @@ class DatabaseMongoose {
   async updateOneQuery(query, update) {
     try {
       let newRecord = await queryModel.updateOne(query, update);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async updateOneinstallMentLeft(installLeft, update) {
+    try {
+      let newRecord = await installLeftModel.updateOne(installLeft, update);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async updateOnetaxSetting(percentage, update) {
+    try {
+      let newRecord = await taxSettingModel.updateOne(percentage, update);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async updateOneinsuranceSetting(percentage, update) {
+    try {
+      let newRecord = await insuranceSettingModel.updateOne(percentage, update);
       return newRecord;
     } catch (e) {
       return e.message;

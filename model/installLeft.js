@@ -4,9 +4,9 @@ const InstallLeftSchema = mongoose.Schema({
     installmentNo          :  {type:Number},
     installmentDate        :  {type:Date},
     installAmount          :  {type:Number},
-    payDate                :  {type:Date},
+    payDate                :  {type:String},
     paymentStatus          :  {type:String},
-    policyPayment          :  {type: mongoose.SchemaTypes.ObjectId,ref:"PolicyPayment"},
+    policyPayment          :  {type:String},
 },{
     timestamps   :   true
 })

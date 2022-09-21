@@ -1,12 +1,12 @@
-class InsranceSetting{
-    constructor(claimDeduction,penatlyPay)
+class InsuranceSetting{
+    constructor()
     {
         //if Customer claim his amount before his maturity Date
-        this.claimDeduction = claimDeduction;
+        this.claimDeduction = 0;
         
         //if customer pay the installment amount late
-        this.penatlyPay     = penatlyPay; 
+        this.penaltyPay     = 0; 
     }
 }
 
-module.exports = InsranceSetting;
+module.exports = InsuranceSetting;
