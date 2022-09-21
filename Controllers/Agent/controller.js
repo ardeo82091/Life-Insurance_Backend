@@ -11,7 +11,7 @@ async function createAgent(req,resp)
         req.cookies["mytoken"]
     );
 
-    if(newPayload.role != "admin"){
+    if(newPayload.role != "admin" && newPayload.role!="employee"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
