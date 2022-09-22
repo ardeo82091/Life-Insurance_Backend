@@ -55,6 +55,7 @@ class Agent{
             return [null,false];
         }
         const findAgent = await db.findOneAgent({"credential":findCred._id});
+        console.log(findAgent)
         if(findAgent)
         {
             return [findAgent,true];

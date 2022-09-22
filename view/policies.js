@@ -99,8 +99,9 @@ class Policies {
         installLeft
       )
     );
+    let findCred = await db.findOneCred({userName:userName});
     await db.updateOneCustomer(
-      { userName: userName },
+      { credential: findCred._id },
       { $push: { policies: newPolicy } }
     );
     const [isInstallmetLeftIdExists, installmentLeftId] =

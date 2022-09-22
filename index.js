@@ -185,12 +185,18 @@ app.post("/api/v1/getAllPolicy/:userName", async (req,resp) => getAllPolicies(re
 app.post("/api/v1/getAllAgentRefer/:userName", async (req,resp) => getAllAgentrefer(req,resp));
 
 
+//Commision
+app.post("/api/v1/getAllCommision", async (req,resp) => getAllCommision(req,resp));
+app.post("/api/v1/getAllAgentCommision/:agentName", async (req,resp) => getAllAgentCommision(req,resp));
+
 //Setting
-const {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting} = require("./Controllers/Setting/controller")
+const {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting} = require("./Controllers/Setting/controller");
+const { getAllCommision ,getAllAgentCommision} = require("./Controllers/Commision/controller");
 app.post("/api/v1/taxSetting", (req,resp) =>taxSetting(req,resp));
 app.post("/api/v1/insuranceSetting", (req,resp) =>insuranceSetting(req,resp));
 app.post("/api/v1/updatetaxSetting", (req,resp) =>updatetaxSetting(req,resp));
 app.post("/api/v1/updateinsuranceSetting", (req,resp) =>updateinsuranceSetting(req,resp));
+
 
 
 //logout

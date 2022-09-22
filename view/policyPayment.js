@@ -104,10 +104,9 @@ class PolicyPayment {
     if (!isUserExist) {
       return [false, "Customer not Found "];
     }
-    if (dUser.agentrefer == null) {
+    if (dUser.agentrefer == "") {
       return [true, "Payment Done"];
     }
-
     const [isCommisonExist, msz1] = await Commision.addcommision(
       accountNo,
       userName,

@@ -463,6 +463,24 @@ class DatabaseMongoose {
         return e.message;
     }
   }
+  async getAgentCommision(agentName) {
+    try{
+        let record = await agentModel.findOne(agentName).populate("commision");
+        return record;
+    }
+    catch (e) {
+        return e.message;
+    }
+  }
+  async getAllCommision() {
+    try{
+        let record = await commisionModel.find();
+        return record;
+    }
+    catch (e) {
+        return e.message;
+    }
+  }
 
 }
 
