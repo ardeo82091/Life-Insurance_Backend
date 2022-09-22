@@ -112,7 +112,7 @@ async function payInstallment(req, resp) {
 async function getAllPolicies(req,resp){
   let userName = req.params.userName;
     let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
-    if(newPayload.role != "agent" && newPayload.role!="employee" && newPayload.role!="admin"){
+    if(newPayload.role!="employee" && newPayload.role!="admin"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
@@ -121,7 +121,9 @@ async function getAllPolicies(req,resp){
         return;
     }
     let [employee,isEmployeeEsists] = await Employee.findEmployee(userName);
-    let [agent,isAgentEsists] = await Agent.findAgent(userName);
+    if(!isEmployeeEsists){
+      return resp.status(403).send("Employee not Exists");
+    }
     const db = new DatabaseMongoose();
     let allPolicy = await db.getAllPolicy();
     if(allPolicy.length ==0)
