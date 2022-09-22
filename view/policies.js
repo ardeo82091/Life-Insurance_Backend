@@ -71,8 +71,8 @@ class Policies {
     let installmentNo = 0;
     for (let index = 0; index < termPlan / premiumType; index++) {
       installmentNo++;
-      const installDate = new Date(
-        installmentDate.setFullYear(installmentDate.getFullYear() + 1)
+      let  installDate = new Date(
+        installmentDate.setFullYear(installmentDate.getFullYear() + index)
       );
       let newPaymentPlan = new InstallmentLeft(
         installmentNo,
@@ -81,7 +81,11 @@ class Policies {
       );
       let newPayPlan = await db.insertOneinstallMentLeft(newPaymentPlan);
       installLeft.push(newPayPlan);
+      installDate = new Date(
+        installmentDate.setFullYear(installmentDate.getFullYear() - index)
+      );
     }
+    
 
     const newPolicy = await db.insertOnePolicy(
       new Policies(
@@ -109,7 +113,7 @@ class Policies {
     if (!isInstallmetLeftIdExists) {
       return [false, "installmentLeft Id not Exists"];
     }
-    const [isPaymentDone, msz] = await PolicyPayment.createPolicyPayment(
+    const [isPaymentDone, msz, totalpay] = await PolicyPayment.createPolicyPayment(
       userName,
       newPolicy.accountno,
       insuranceScheme,

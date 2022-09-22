@@ -18,6 +18,7 @@ class Customer
         this.pincode           =    pincode;
         this.nominee           =    nominee;
         this.policies          =    [];
+        this.claimPolicy       =    [];
         this.agentrefer        =    agentName;
         this.nomineeRelation   =    nomineeRelation; 
         this.isActive          =    true;

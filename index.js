@@ -87,7 +87,7 @@ const {
 
 const {marketing} =require('./Controllers/Marketing/controller')
 
-const {buyNewPolicy,payInstallment,getAllPolicies} = require('./Controllers/Policy/controller')
+const {buyNewPolicy,payInstallment,getAllPolicies,getAllInstallments} = require('./Controllers/Policy/controller')
 
 const { logout } = require("./Controllers/Logout/controller.js");
 
@@ -183,6 +183,7 @@ app.post("/api/v1/payInstallment/:userName", async (req,resp) => payInstallment(
 app.post("/api/v1/getUserAllPolicy/:userName", async (req,resp) => getMyAllPolicy(req,resp));
 app.post("/api/v1/getAllPolicy/:userName", async (req,resp) => getAllPolicies(req,resp));
 app.post("/api/v1/getAllAgentRefer/:userName", async (req,resp) => getAllAgentrefer(req,resp));
+app.post("/api/v1/getAllInstallmentPolicy/:userName", async (req,resp) => getAllInstallments(req,resp));
 
 
 //Commision

@@ -5,6 +5,7 @@ const Employee = require('../../view/employee');
 const Agent = require('../../view/agent');
 const PolicyPayment = require("../../view/policyPayment.js");
 const {DatabaseMongoose} = require('../../repository/database');
+const PolicyClaim = require("../../view/policyWithdraw.js");
 
 async function buyNewPolicy(req, resp) {
   const userName = req.params.userName;
@@ -139,4 +140,42 @@ async function getAllPolicies(req,resp){
 
 }
 
-module.exports = { buyNewPolicy, payInstallment,getAllPolicies };
+async function getAllInstallments(req,resp){
+  const userName = req.params.userName;
+  let newPayload = JWTPayload.isValidateToken(
+    req,
+    resp,
+    req.cookies["mytoken"]
+  );
+  if (newPayload.role != "customer") {
+    resp.status(401).send(`${newPayload.role} do not have any access`);
+    return;
+  }
+  if (newPayload.isActive == false) {
+    resp.status(401).send(`${newPayload.firstName} is Inactive`);
+    return;
+  }
+  let [findUser,isUserExist] = await Customer.findCustomer(userName);
+  if(!isUserExist){
+    return resp.status(403).send("CustomerName not Exist");
+  }
+  const policyId = req.body.policyId;
+  const [isPolicyExist,findPolicy] = await PolicyClaim.findUserPolicy(userName,policyId);
+  if(!isPolicyExist){
+    return resp.status(403).send("Policy not Found");
+  }
+  let allLeftInstallments = findPolicy.installmentLeft;
+    if(allLeftInstallments.length ==0)
+    {
+      resp.status(403).send("installments not Exist");
+      return;
+    }
+    const { limit, pageNumber } = req.body;
+    let startIndex = (pageNumber - 1) * limit;
+    let endIndex = pageNumber * limit;
+    resp.status(201).send([allLeftInstallments.slice(startIndex,endIndex),allLeftInstallments]);
+    return;
+
+}
+
+module.exports = { buyNewPolicy, payInstallment,getAllPolicies,getAllInstallments };
