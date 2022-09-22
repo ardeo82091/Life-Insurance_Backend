@@ -52,7 +52,7 @@ async function getAllAgentCommision(req,resp){
         return resp.status(403).send("AgentName not Exists");
     }
     const db = new DatabaseMongoose();
-    const allCommission = await db.getAgentCommision({userName:agentName});
+    const allCommission = await Agent.allCommission(agentName);
     const { limit, pageNumber } = req.body;
     if (allCommission.length == 0) {
         return resp.status(403).send("No Commision Exist");

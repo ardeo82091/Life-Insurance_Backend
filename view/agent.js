@@ -55,7 +55,6 @@ class Agent{
             return [null,false];
         }
         const findAgent = await db.findOneAgent({"credential":findCred._id});
-        console.log(findAgent)
         if(findAgent)
         {
             return [findAgent,true];
@@ -79,6 +78,18 @@ class Agent{
         const db = new DatabaseMongoose();
         const allAgents = await db.getAllAgent();
         return allAgents;
+    }
+
+    static async allCommission(userName){
+        let [dUser,isAgentExists] = await Agent.findAgent(userName);
+        const db = new DatabaseMongoose();
+        let allCommission = [];
+        for(let index=0; index<dUser.commision.length; index++){
+            let indii = dUser.commision[index];
+            let findPolicy = await db.findOneCommision({_id:indii});
+            allCommission.push(findPolicy);
+        }
+        return allCommission;
     }
 
     static async updateCommisionAmount(id)
