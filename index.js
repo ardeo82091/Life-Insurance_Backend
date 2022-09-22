@@ -46,6 +46,7 @@ const {
   noOfAgent,
   updateAgent,
   deleteAgent,
+  getAllAgentrefer
 } = require("./Controllers/Agent/controller.js");
 
 const {
@@ -179,8 +180,9 @@ app.post("/api/v1/deleteQuery", async (req, resp) => deleteQuery(req, resp));
 //Policy
 app.post("/api/v1/buyPolicy/:userName", async (req,resp) => buyNewPolicy(req,resp));
 app.post("/api/v1/payInstallment/:userName", async (req,resp) => payInstallment(req,resp));
-app.get("/api/v1/getUserAllPolicy/:userName", async (req,resp) => getMyAllPolicy(req,resp));
-app.get("/api/v1/getAllPolicy/:userName", async (req,resp) => getAllPolicies(req,resp));
+app.post("/api/v1/getUserAllPolicy/:userName", async (req,resp) => getMyAllPolicy(req,resp));
+app.post("/api/v1/getAllPolicy/:userName", async (req,resp) => getAllPolicies(req,resp));
+app.post("/api/v1/getAllAgentRefer/:userName", async (req,resp) => getAllAgentrefer(req,resp));
 
 
 //Setting

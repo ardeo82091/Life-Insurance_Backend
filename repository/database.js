@@ -239,7 +239,7 @@ class DatabaseMongoose {
   }
   async findOnePolicy(policy) {
     try {
-      let newRecord = await policyModel.findOne(policy);
+      let newRecord = await policyModel.findOne(policy).populate("installmentLeft");
       return newRecord;
     } catch (e) {
       console.log(e.message);
@@ -448,6 +448,15 @@ class DatabaseMongoose {
   async getAllPolicy() {
     try{
         let record = await policyModel.find().populate("installmentLeft");
+        return record;
+    }
+    catch (e) {
+        return e.message;
+    }
+  }
+  async AgentgetCustomer(agentName) {
+    try{
+        let record = await customerModel.find(agentName);
         return record;
     }
     catch (e) {

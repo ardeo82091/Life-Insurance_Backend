@@ -1,6 +1,7 @@
 const Agent = require('../../view/agent.js');
 const Employee = require('../../view/employee');
 const JWTPayload  = require('../../view/authentication');
+const {DatabaseMongoose} = require('../../repository/database');
 const bcrypt = require('bcrypt');
 
 async function createAgent(req,resp)
@@ -192,10 +193,44 @@ async function deleteAgent(req,resp)
 //    }
 }
 
+async function getAllAgentrefer(req,resp)
+{
+    let userName = req.params.userName;
+    let newPayload = JWTPayload.isValidateToken(
+        req, 
+        resp, 
+        req.cookies["mytoken"]
+    );
+
+    if(newPayload.role != "agent"){
+        resp.status(401).send(`${newPayload.role} do not have any access`)
+        return;
+    }
+    if (newPayload.isActive == false){
+        resp.status(401).send(`${newPayload.firstName} is Inactive`)
+        return;
+    }
+    let [findAgent,isAgentExists] = await Agent.findAgent(userName);
+    if(!isAgentExists){
+        return resp.status(403).send("AgentName not Found");
+    }
+    const { limit, pageNumber } = req.body;
+    const db = new DatabaseMongoose();
+    let allAgentsrefer = await db.AgentgetCustomer({agentrefer:userName}) ;
+    if (allAgentsrefer.length == 0) {
+        return resp.status(403).send("No Customer Exist");
+    }
+    let startIndex = (pageNumber - 1) * limit;
+    let endIndex = pageNumber * limit;
+    resp.status(201).send([allAgentsrefer.slice(startIndex,endIndex),allAgentsrefer]);
+    return;
+}
+
 module.exports = {
     createAgent,
     getAllAgent,
     noOfAgent,
     updateAgent,
-    deleteAgent
+    deleteAgent,
+    getAllAgentrefer,
 };
