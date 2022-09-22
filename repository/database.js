@@ -456,7 +456,7 @@ class DatabaseMongoose {
   }
   async AgentgetCustomer(agentName) {
     try{
-        let record = await customerModel.find(agentName);
+        let record = await customerModel.find(agentName).populate("policies");
         return record;
     }
     catch (e) {

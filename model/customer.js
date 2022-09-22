@@ -22,7 +22,7 @@ const CustomerSchema = mongoose.Schema({
     pincode         :  {type:Number}, 
     nominee         :  {type:String}, 
     nomineeRelation :  {type:String}, 
-    policies        :  {type:[mongoose.SchemaTypes.ObjectId],ref:"ContactDetails"},
+    policies        :  {type:[mongoose.SchemaTypes.ObjectId],ref:"Policy"},
     agentrefer      :  {type:String},
     role            :  {type:String},
     isActive        :  {type:Boolean}
