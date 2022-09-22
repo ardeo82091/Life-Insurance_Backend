@@ -31,9 +31,12 @@ class PolicyClaim{
         if(!isPolicyExistinUser){
             return [false,"This policy not belongs to you"];
         }
+        if(date<findPolicy.maturityDate){
+            return [false,"Your Policy maturity Date is not come yet"]
+        }
         for(let index=0; index<findPolicy.installmentLeft.length; index++){
             if(findPolicy.installmentLeft[0].paymentStatus!="Paid"){
-                return [false,"You"]
+                return [false,"Your Policy cannot be Claimed before all Payment Done"]
             }
         }
         const reqNewPolicy = await db.insertOneClaimPolicy(new PolicyClaim(userName,date,
@@ -43,6 +46,8 @@ class PolicyClaim{
             findPolicy.insuranceScheme
         ));
 
+        await db.updateOneCustomer({_id:findUser._id},{$push:{claimPolicy:reqNewPolicy}});
+        return [true,"req to claim Policy Done"]
     }
 }
 

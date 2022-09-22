@@ -170,10 +170,10 @@ async function getAllInstallments(req,resp){
       resp.status(403).send("installments not Exist");
       return;
     }
-    const { limit, pageNumber } = req.body;
-    let startIndex = (pageNumber - 1) * limit;
-    let endIndex = pageNumber * limit;
-    resp.status(201).send([allLeftInstallments.slice(startIndex,endIndex),allLeftInstallments]);
+   // const { limit, pageNumber } = req.body;
+   // let startIndex = (pageNumber - 1) * limit;
+   //let endIndex = pageNumber * limit;
+    resp.status(201).send(allLeftInstallments);
     return;
 
 }
