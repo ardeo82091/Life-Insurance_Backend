@@ -2,6 +2,7 @@ const { DatabaseMongoose } = require("../repository/database");
 
 const Customer = require("./customer");
 const Commision = require("./commision");
+const TotalPayDescrip = require("./totalPayDescription");
 class PolicyPayment {
   constructor(
     date,
@@ -118,6 +119,30 @@ class PolicyPayment {
       return [false, msz1];
     }
     return [true, "Payment Done"];
+  }
+
+
+
+  static async getTaxPenaltyInAmount(installmentLeftId){
+    const db = new DatabaseMongoose();
+    const date = new Date();
+    const findinstallMent = await db.findOneinstallMentLeft({
+      _id: installmentLeftId,
+    });
+    const installAmount = findinstallMent.installAmount;
+    const findInsuranceSetting = await db.findOneinsuranceSetting();
+    const penaltyper = findInsuranceSetting[0].penaltyPay;
+    let penaltyfee = 0;
+    if (findinstallMent.installmentDate < date) {
+      penaltyfee = penaltyper * installAmount;
+    }
+    const findTax = await db.findOnetaxSetting();
+    const taxper = findTax[0].taxpercentage / 100;
+
+    const taxAmount = taxper * installAmount;
+    const totalPayAmount = installAmount + taxAmount + penaltyfee;
+    const newTotalPay = new TotalPayDescrip(installAmount,taxAmount,penaltyfee,totalPayAmount)
+    return newTotalPay;
   }
 }
 module.exports = PolicyPayment;

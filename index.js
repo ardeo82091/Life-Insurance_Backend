@@ -87,7 +87,7 @@ const {
 
 const {marketing} =require('./Controllers/Marketing/controller')
 
-const {buyNewPolicy,payInstallment,getAllPolicies,getAllInstallments} = require('./Controllers/Policy/controller')
+const {buyNewPolicy,payInstallment,getAllPolicies,getAllInstallments,getAmountDescription} = require('./Controllers/Policy/controller')
 
 const { logout } = require("./Controllers/Logout/controller.js");
 
@@ -198,6 +198,7 @@ app.post("/api/v1/insuranceSetting", (req,resp) =>insuranceSetting(req,resp));
 app.post("/api/v1/updatetaxSetting", (req,resp) =>updatetaxSetting(req,resp));
 app.post("/api/v1/updateinsuranceSetting", (req,resp) =>updateinsuranceSetting(req,resp));
 app.get("/api/v1/gettaxper", async (req,resp)=>getTaxSetting(req,resp));
+app.post("/api/v1/getAmountDescrip", async (req,resp)=>getAmountDescription(req,resp));
 
 
 

@@ -178,4 +178,10 @@ async function getAllInstallments(req,resp){
 
 }
 
-module.exports = { buyNewPolicy, payInstallment,getAllPolicies,getAllInstallments };
+async function getAmountDescription(req,resp){
+  const installmentLeftId = req.body.installmentLeftId;
+  let description = await PolicyPayment.getTaxPenaltyInAmount(installmentLeftId);
+  return resp.status(201).send(description);
+}
+
+module.exports = { buyNewPolicy, payInstallment,getAllPolicies,getAllInstallments,getAmountDescription };
