@@ -445,13 +445,13 @@ class DatabaseMongoose {
       return e.message;
     }
   }
-  async getPolicy(iD) {
+  async getAllPolicy() {
     try{
-        let record = await customerModel.where("credential").equals(iD).populate("policies.Object");
+        let record = await policyModel.find().populate("installmentLeft");
         return record;
     }
     catch (e) {
-        console.log(e.message)
+        return e.message;
     }
   }
 

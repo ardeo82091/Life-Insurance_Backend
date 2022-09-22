@@ -111,6 +111,19 @@ class Customer
         return allCustomers;
     }
 
+    static async getAllPolicies(userName)
+    {
+        let [dUser,isCustomerExists] = await Customer.findCustomer(userName);
+        const db = new DatabaseMongoose();
+        let allPolicies = [];
+        for(let index=0; index<dUser.policies.length; index++){
+            let indii = dUser.policies[index];
+            let findPolicy = await db.findOnePolicy({_id:indii});
+            allPolicies.push(findPolicy);
+        }
+        return allPolicies;
+    }
+
     static async updateCustomerActive(isactive,customerId)
     {
         const db = new DatabaseMongoose();

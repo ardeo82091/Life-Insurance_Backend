@@ -19,7 +19,7 @@ async function createCustomer(req,resp)
 async function getAllCustomer(req,resp)
 {
     let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
-    if(newPayload.role != "admin" && newPayload.role!="employee"){
+    if(newPayload.role != "admin" && newPayload.role!="employee"&& newPayload.role!="agent"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
@@ -41,7 +41,7 @@ async function getAllCustomer(req,resp)
 async function noOfCustomer(req,resp)
 {
     let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
-    if(newPayload.role != "admin" && newPayload.role!="employee"){
+    if(newPayload.role != "admin" && newPayload.role!="employee" && newPayload.role!="agent"){
         resp.status(401).send(`${newPayload.role} do not have any access`)
         return;
     }
@@ -155,4 +155,31 @@ async function deleteCustomer (req,resp)
     }
 }
 
-module.exports = {createCustomer,getAllCustomer,noOfCustomer,updateCustomer,deleteCustomer};
+async function getMyAllPolicy(req,resp)
+{
+    let userName = req.params.userName;
+    let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
+    if(newPayload.role != "customer"){
+        resp.status(401).send(`${newPayload.role} do not have any access`)
+        return;
+    }
+    if (newPayload.isActive == false){
+        resp.status(401).send(`${newPayload.firstName} is Inactive`)
+        return;
+    }
+    let [customer,isCustomerEsists] = await Customer.findCustomer(userName);
+    if(!isCustomerEsists){
+        return resp.status(403).send("CUstomer Not Found")
+    }
+    const { limit, pageNumber } = req.body;
+    let allPolicy = await Customer.getAllPolicies(userName);
+    if (allPolicy.length == 0) {
+        return resp.status(403).send("No Policy Exist");
+    }
+    let startIndex = (pageNumber - 1) * limit;
+    let endIndex = pageNumber * limit;
+    resp.status(201).send([allPolicy.slice(startIndex,endIndex),allPolicy]);
+    return;
+}
+
+module.exports = {createCustomer,getAllCustomer,noOfCustomer,updateCustomer,deleteCustomer,getMyAllPolicy};

@@ -27,6 +27,7 @@ const {
   noOfCustomer,
   updateCustomer,
   deleteCustomer,
+  getMyAllPolicy
 } = require("./Controllers/Customer/controller.js");
 
 const {
@@ -85,7 +86,7 @@ const {
 
 const {marketing} =require('./Controllers/Marketing/controller')
 
-const {buyNewPolicy,payInstallment} = require('./Controllers/Policy/controller')
+const {buyNewPolicy,payInstallment,getAllPolicies} = require('./Controllers/Policy/controller')
 
 const { logout } = require("./Controllers/Logout/controller.js");
 
@@ -178,6 +179,8 @@ app.post("/api/v1/deleteQuery", async (req, resp) => deleteQuery(req, resp));
 //Policy
 app.post("/api/v1/buyPolicy/:userName", async (req,resp) => buyNewPolicy(req,resp));
 app.post("/api/v1/payInstallment/:userName", async (req,resp) => payInstallment(req,resp));
+app.get("/api/v1/getUserAllPolicy/:userName", async (req,resp) => getMyAllPolicy(req,resp));
+app.get("/api/v1/getAllPolicy/:userName", async (req,resp) => getAllPolicies(req,resp));
 
 
 //Setting

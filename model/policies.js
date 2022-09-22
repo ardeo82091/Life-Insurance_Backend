@@ -15,7 +15,7 @@ const PolicySchema = mongoose.Schema({
     interestAmount       :  {type:Number},
     installmentLeft      :  {
                                type: [mongoose.SchemaTypes.ObjectId],
-                               ref: "InstallLeftSchema",
+                               ref: "InstallMentLeft",
                             },
     claim                :  {type:Boolean},
 },{

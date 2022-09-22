@@ -63,30 +63,35 @@ async function updatetaxSetting(req,resp){
     resp.status(201).send("Tax Percentage Updated");
 }
 
-async function updateinsuranceSetting(req,resp){
+async function updateinsuranceSetting(req, resp) {
     const newPayload = JWTPayload.isValidateToken(
-        req,
-        resp,
-        req.cookies["mytoken"]
+      req,
+      resp,
+      req.cookies["mytoken"]
     );
     if (newPayload.role != "admin") {
-        resp.status(401).send("please specify this role to admin");
-        return;
+      resp.status(401).send("please specify this role to admin");
+      return;
     }
-    if (newPayload.isActive == false) {    
-        resp.status(401).send(`${newPayload.firstName} is Inactive`);
-        return;
+    if (newPayload.isActive == false) {
+      resp.status(401).send(`${newPayload.firstName} is Inactive`);
+      return;
     }
-    const {propertyToUpdate,value} = req.body;
+    const { claimDeduction, penaltyPay } = req.body;
     const db = new DatabaseMongoose();
     const findInsuranceSetting = await db.findOneinsuranceSetting();
-    if(propertyToUpdate=="claimDeduction"){
-        await db.updateOneinsuranceSetting({"_id":findInsuranceSetting[0]._id},{$set:{claimDeduction:value}});
-    }
-    if(propertyToUpdate=="penaltyPay"){
-        await db.updateOneinsuranceSetting({"_id":findInsuranceSetting[0]._id},{$set:{penaltyPay:value}});
-    }
-    resp.status(201).send(`${propertyToUpdate} Updated`);
-}
+  
+    await db.updateOneinsuranceSetting(
+      { _id: findInsuranceSetting[0]._id },
+      { $set: { claimDeduction: claimDeduction } }
+    );
+  
+    await db.updateOneinsuranceSetting(
+      { _id: findInsuranceSetting[0]._id },
+      { $set: { penaltyPay: penaltyPay } }
+    );
+  
+    resp.status(201).send( Updated);
+  }
 
 module.exports = {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting};
