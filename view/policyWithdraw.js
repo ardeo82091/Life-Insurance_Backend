@@ -1,14 +1,17 @@
 const { DatabaseMongoose } = require("../repository/database");
 const Customer = require("./customer");
 class PolicyClaim{
-    constructor(customerName,reqDate,insuranceAccount,bankDetails,withdrawAmount,insuranceScheme){
+    constructor(customerName,reqDate,insuranceAccount,bankDetails,sumAssureAfterYears,insuranceScheme,policyId){
         this.reqDate = reqDate;
         this.customerName = customerName;
         this.insuranceAccount = insuranceAccount;
         this.insuranceScheme = insuranceScheme;
+        this.sumAssureAfterYears = sumAssureAfterYears;
         this.withdrawDate = "";
         this.bankDetails = bankDetails;
-        this.withdrawAmount = withdrawAmount;
+        this.withdrawAmount = 0;
+        this.policyId = policyId;
+        this.withdrawCheck = false;
     }
 
     static async findUserPolicy(userName,policyId){
@@ -23,7 +26,7 @@ class PolicyClaim{
         return [false,null];
     }
 
-    static async reqclaimPolicy(userName,policyId,bankDetails,withdrawAmount){
+    static async reqclaimPolicy(userName,policyId,bankDetails){
         const date = new Date();
         const db = new DatabaseMongoose();
         let [findUser,isUserExist] = await Customer.findCustomer(userName);
@@ -38,16 +41,37 @@ class PolicyClaim{
             if(findPolicy.installmentLeft[0].paymentStatus!="Paid"){
                 return [false,"Your Policy cannot be Claimed before all Payment Done"]
             }
+        }if(findPolicy.claim!=false){
+            return [false,"Policy is already Claimed"]
         }
-        const reqNewPolicy = await db.insertOneClaimPolicy(new PolicyClaim(userName,date,
+        const reqNewPolicy = await db.insertOnePolicyClaim(new PolicyClaim(userName,date,
             findPolicy.accountno,
             bankDetails,
-            withdrawAmount,
-            findPolicy.insuranceScheme
+            findPolicy.sumAssuredAfterYears,
+            findPolicy.insuranceScheme,
+            policyId
         ));
 
         await db.updateOneCustomer({_id:findUser._id},{$push:{claimPolicy:reqNewPolicy}});
         return [true,"req to claim Policy Done"]
+    }
+
+    static async accptClaimPolicy(policyClaimId)
+    {
+        const db = new DatabaseMongoose();
+        const findpolicyClaimId = await db.findOnePolicyClaim({_id:policyClaimId});
+        if(!findpolicyClaimId){
+            return [false,"PolicyClaimId not found"];
+        }
+        const policy = await db.findOneinsuranceSetting();
+        const findclaim = policy[0].claimDeduction/100;
+        const withdrawAmount = findpolicyClaimId.sumAssureAfterYears*findclaim;
+        
+        await db.updateOnePolicyClaim({_id:policyClaimId},{$set:{withdrawAmount:withdrawAmount}});
+        await db.updateOnePolicyClaim({_id:policyClaimId},{$set:{withdrawCheck: true}});
+        await db.updateOnePolicyClaim({_id:policyClaimId},{$set:{withdrawDate:date}});
+        await db.updateOnePolicy({_id:findpolicyClaimId.policyId},{claim:true})
+        return [true,"Transaction Done"]
     }
 }
 

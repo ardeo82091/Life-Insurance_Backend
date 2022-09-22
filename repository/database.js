@@ -14,6 +14,7 @@ const installLeftModel = require("../model/installLeft");
 const taxSettingModel = require("../model/taxSetting");
 const insuranceSettingModel = require("../model/insuranceSetting")
 const commisionModel = require("../model/commision");
+const policyClaimModel = require("../model/policyWithdraw");
 
 class DatabaseMongoose {
   constructor() {
@@ -152,6 +153,14 @@ class DatabaseMongoose {
       return e.message;
     }
   }
+  async insertOnePolicyClaim(commision){
+    try {
+      let newRecord = await policyClaimModel.create(commision);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
 
 
 
@@ -269,6 +278,14 @@ class DatabaseMongoose {
       console.log(e.message);
     }
   }
+  async findOnePolicyClaim(comis) {
+    try {
+      let newRecord = await policyClaimModel.findOne(comis);
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
 
 
 
@@ -369,6 +386,22 @@ class DatabaseMongoose {
   async updateOneinsuranceSetting(percentage, update) {
     try {
       let newRecord = await insuranceSettingModel.updateOne(percentage, update);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async updateOnePolicy(percentage, update) {
+    try {
+      let newRecord = await policyModel.updateOne(percentage, update);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async updateOnePolicyClaim(percentage, update) {
+    try {
+      let newRecord = await policyClaimModel.updateOne(percentage, update);
       return newRecord;
     } catch (e) {
       return e.message;

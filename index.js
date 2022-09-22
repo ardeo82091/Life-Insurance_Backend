@@ -193,6 +193,7 @@ app.post("/api/v1/getAllAgentCommision/:agentName", async (req,resp) => getAllAg
 //Setting
 const {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting,getTaxSetting} = require("./Controllers/Setting/controller");
 const { getAllCommision ,getAllAgentCommision} = require("./Controllers/Commision/controller");
+const { reqClaim, accptClaim } = require("./Controllers/PolicyClaim/controller");
 app.post("/api/v1/taxSetting", (req,resp) =>taxSetting(req,resp));
 app.post("/api/v1/insuranceSetting", (req,resp) =>insuranceSetting(req,resp));
 app.post("/api/v1/updatetaxSetting", (req,resp) =>updatetaxSetting(req,resp));
@@ -200,7 +201,9 @@ app.post("/api/v1/updateinsuranceSetting", (req,resp) =>updateinsuranceSetting(r
 app.get("/api/v1/gettaxper", async (req,resp)=>getTaxSetting(req,resp));
 app.post("/api/v1/getAmountDescrip", async (req,resp)=>getAmountDescription(req,resp));
 
-
+//Claim Policy
+app.post("/api/v1/reqPolicyClaim/:userName", async (req,resp)=>reqClaim(req,resp));
+app.post("/api/v1/accptPolicyClaim", async (req,resp)=>accptClaim(req,resp));
 
 //logout
 app.post("/api/v1/logout", (req, resp) => logout(req, resp));
