@@ -92,6 +92,13 @@ async function updateinsuranceSetting(req, resp) {
     );
   
     resp.status(201).send( Updated);
-  }
+}
 
-module.exports = {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting};
+async function getTaxSetting(req,resp){
+    const db = new DatabaseMongoose();
+    const findTax = await db.findOnetaxSetting();
+    const per = (findTax[0].taxpercentage)
+    return resp.status(201).send(per.toString());
+}
+
+module.exports = {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting,getTaxSetting};
