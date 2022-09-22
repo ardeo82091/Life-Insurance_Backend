@@ -18,6 +18,7 @@ const AgentSchema = mongoose.Schema({
     qualification         :  {type:String},
     role                  :  {type:String},
     commision             :  {type:[mongoose.SchemaTypes.ObjectId],ref:"Commision"},
+    transaction           :  {type:[mongoose.SchemaTypes.ObjectId],ref:'CommisionWithdraw'},
     totalCommisionAmmount :  {type:Number},
     isActive              :  {type:Boolean},
 },{

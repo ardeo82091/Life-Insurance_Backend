@@ -101,4 +101,103 @@ async function login(req, resp)
     }
 }
 
-module.exports = {login};
+async function validCustomer(req,resp)
+{
+    const userName = req.params.userName;
+    let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
+    if(newPayload == false)
+    {
+        resp.status(401).send("Login require");
+        return;
+    }
+    if(newPayload.role != "customer" ){
+        resp.status(401).send("Customer Login required")
+        return;
+    }
+    let [dUser,isUsernameExist] = await Customer.findCustomer(userName);
+    if(!isUsernameExist){
+        resp.status(401).send("User Not Found");
+            return;
+    }
+    if(dUser.isActive==false)
+        {
+            resp.status(401).send("User Not Found");
+            return;
+        }
+        if(newPayload.userName != dUser.credential){
+            return resp.status(401).send("Login with your Id");
+        }
+    resp.status(201).send("LoggedIN")
+    return;
+}
+async function validAgent(req,resp)
+{
+    const userName = req.params.userName;
+    let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
+    if(newPayload == false)
+    {
+        resp.status(401).send("Login require");
+        return;
+    }
+    if(newPayload.role != "agent" ){
+        resp.status(401).send("agent Login required")
+        return;
+    }
+    let [dUser,isUsernameExist] = await Agent.findAgent(userName);
+    if(!isUsernameExist){
+        resp.status(401).send("User Not Found");
+            return;
+    }
+    if(dUser.isActive==false)
+        {
+            resp.status(401).send("User Not Found");
+            return;
+        }
+        if(newPayload.userName != dUser.credential){
+            return resp.status(401).send("Login with your Id");
+        }
+    resp.status(201).send("LoggedIN")
+    return;
+}
+async function validEmployee(req,resp)
+{
+    const userName = req.params.userName;
+    let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
+    if(newPayload == false)
+    {
+        resp.status(401).send("Login require");
+        return;
+    }
+    if(newPayload.role != "employee"){
+        resp.status(401).send("Employee Login required")
+        return;
+    }
+    let [dUser,isUsernameExist] = await Employee.findEmployee(userName);
+    if(!isUsernameExist){
+        resp.status(401).send("User Not Found");
+            return;
+    }
+    if(dUser.isActive==false)
+        {
+            resp.status(401).send("User Not Found");
+            return;
+        }
+    if(newPayload.userName != dUser.credential){
+        return resp.status(401).send("Login with your Id");
+    }
+    resp.status(201).send("LoggedIN")
+    return;
+}
+
+function validAdmin(req,resp)
+{
+    let newPayload = JWTPayload.isValidateToken(req, resp, req.cookies["mytoken"]);
+    if(newPayload.role != "admin"){
+        resp.status(401).send("please specify this role to admin")
+        return;
+    }
+    resp.status(201).send("LoggedIN")
+    return;
+}
+
+module.exports = {login,validEmployee,validCustomer,validAgent,validAdmin};

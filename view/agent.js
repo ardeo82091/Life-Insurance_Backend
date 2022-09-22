@@ -13,6 +13,7 @@ class Agent{
         this.qualification         =  qualification;
         this.role                  =  role;
         this.commision             =  [];
+        this.transaction           =  [];
         this.totalCommisionAmmount =  0;
         this.isActive              =  isActive;
     }

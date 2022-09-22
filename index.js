@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const { login } = require("./Controllers/Login/controller");
+const { login,validEmployee,validCustomer,validAgent,validAdmin } = require("./Controllers/Login/controller");
 const {
   createCustomer,
   getAllCustomer,
@@ -102,7 +102,7 @@ app.post("/api/v1/getAllEmployee", async (req, resp) =>getAllEmployee(req, resp)
 app.get("/api/v1/numberOfEmployee", async (req, resp) =>noOfEmployee(req, resp));
 app.put("/api/v1/updateEmployee/:userName", async (req, resp) =>updateEmployee(req, resp));
 app.post("/api/v1/deleteEmployee/:userName", async (req, resp) =>deleteEmployee(req, resp));
-app.get("/api/v1/profile/:userName", async (req, resp) =>profile(req, resp));
+
 
 
 
@@ -190,10 +190,14 @@ app.post("/api/v1/getAllInstallmentPolicy/:userName", async (req,resp) => getAll
 app.post("/api/v1/getAllCommision", async (req,resp) => getAllCommision(req,resp));
 app.post("/api/v1/getAllAgentCommision/:agentName", async (req,resp) => getAllAgentCommision(req,resp));
 
-//Setting
+
 const {taxSetting,insuranceSetting,updatetaxSetting,updateinsuranceSetting,getTaxSetting} = require("./Controllers/Setting/controller");
 const { getAllCommision ,getAllAgentCommision} = require("./Controllers/Commision/controller");
 const { reqClaim, accptClaim } = require("./Controllers/PolicyClaim/controller");
+const {withDrawClaim,accptWithDraw,allCommisionWithdraw,allAgentCommisionWithdraw} = require("./Controllers/CommisionWIthDraw/controller")
+
+
+//Setting
 app.post("/api/v1/taxSetting", (req,resp) =>taxSetting(req,resp));
 app.post("/api/v1/insuranceSetting", (req,resp) =>insuranceSetting(req,resp));
 app.post("/api/v1/updatetaxSetting", (req,resp) =>updatetaxSetting(req,resp));
@@ -204,6 +208,24 @@ app.post("/api/v1/getAmountDescrip", async (req,resp)=>getAmountDescription(req,
 //Claim Policy
 app.post("/api/v1/reqPolicyClaim/:userName", async (req,resp)=>reqClaim(req,resp));
 app.post("/api/v1/accptPolicyClaim", async (req,resp)=>accptClaim(req,resp));
+
+//WithDraw Amount
+app.post("/api/v1/withdrawCommision/:userName", async (req,resp)=>withDrawClaim(req,resp));
+app.post("/api/v1/accptwithdraw", async (req,resp)=>accptWithDraw(req,resp));
+app.post("/api/v1/getallCommisionWithdraw", async (req,resp)=>allCommisionWithdraw(req,resp));
+app.post("/api/v1/getallAgentCommisionWithdraw/:agentName", async (req,resp)=>allAgentCommisionWithdraw(req,resp));
+
+const {profileAgent,profileCustomer} = require("./Controllers/Profile/controller")
+//Profile
+app.get("/api/v1/profile/:userName", async (req, resp) =>profile(req, resp));
+app.get("/api/v1/profileCustomer/:userName", async (req, resp) =>profileCustomer(req, resp));
+app.get("/api/v1/profileAgent/:userName", async (req, resp) =>profileAgent(req, resp));
+
+//Validation
+app.post("/api/v1/isCustomerLogin/:userName",(req,resp)=>validCustomer(req,resp));
+app.post("/api/v1/isAgentLogin/:userName",(req,resp)=>validAgent(req,resp));
+app.post("/api/v1/isEmployeeLogin/:userName",(req,resp)=>validEmployee(req,resp));
+app.post("/api/v1/isAdminLogin",(req,resp)=>validAdmin(req,resp));
 
 //logout
 app.post("/api/v1/logout", (req, resp) => logout(req, resp));

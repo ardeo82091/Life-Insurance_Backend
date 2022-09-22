@@ -15,6 +15,7 @@ const taxSettingModel = require("../model/taxSetting");
 const insuranceSettingModel = require("../model/insuranceSetting")
 const commisionModel = require("../model/commision");
 const policyClaimModel = require("../model/policyWithdraw");
+const commisionWithdrawModel = require("../model/commisionWithdaw");
 
 class DatabaseMongoose {
   constructor() {
@@ -161,6 +162,14 @@ class DatabaseMongoose {
       return e.message;
     }
   }
+  async insertOneWithdrawReq(commision){
+    try {
+      let newRecord = await commisionWithdrawModel.create(commision);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
 
 
 
@@ -281,6 +290,14 @@ class DatabaseMongoose {
   async findOnePolicyClaim(comis) {
     try {
       let newRecord = await policyClaimModel.findOne(comis);
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  async findOneCommisionWithdraw(comis) {
+    try {
+      let newRecord = await commisionWithdrawModel.findOne(comis);
       return newRecord;
     } catch (e) {
       console.log(e.message);
@@ -407,6 +424,14 @@ class DatabaseMongoose {
       return e.message;
     }
   }
+  async updateOneCommisionWithdraw(percentage, update) {
+    try {
+      let newRecord = await commisionWithdrawModel.updateOne(percentage, update);
+      return newRecord;
+    } catch (e) {
+      return e.message;
+    }
+  }
 
 
 
@@ -496,10 +521,28 @@ class DatabaseMongoose {
         return e.message;
     }
   }
+  async getAgentAllTransaction(agentName) {
+    try{
+        let record = await agentModel.find(agentName).populate("transaction");
+        return record;
+    }
+    catch (e) {
+        return e.message;
+    }
+  }
   
   async getAllCommision() {
     try{
         let record = await commisionModel.find();
+        return record;
+    }
+    catch (e) {
+        return e.message;
+    }
+  }
+  async getAllTransaction() {
+    try{
+        let record = await commisionWithdrawModel.find();
         return record;
     }
     catch (e) {
