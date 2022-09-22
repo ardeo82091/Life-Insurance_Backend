@@ -2,12 +2,11 @@ const Credentials = require('../../view/credential.js');
 const Customer = require('../../view/customer.js');
 const Employee = require('../../view/employee');
 const JWTPayload  = require('../../view/authentication');
-const bcrypt = require('bcrypt');
 
 async function createCustomer(req,resp)
 {
-    const {firstName,lastName,userName,password,dateOfBirth,address,email,stateName,cityName,pincode,nominee,nomineeRelation} = req.body;
-    const [isCustomerCreate,msz] = await Customer.createNewCustomer(firstName,lastName,userName,password,dateOfBirth,address,email,stateName,cityName,pincode,nominee,nomineeRelation);
+    const {firstName,lastName,userName,password,dateOfBirth,address,email,stateName,cityName,pincode,nominee,nomineeRelation,agentName} = req.body;
+    const [isCustomerCreate,msz] = await Customer.createNewCustomer(firstName,lastName,userName,password,dateOfBirth,address,email,stateName,cityName,pincode,nominee,nomineeRelation,agentName);
     if(!isCustomerCreate)
     {
         resp.status(403).send(msz);

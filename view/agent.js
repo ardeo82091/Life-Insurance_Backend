@@ -90,8 +90,8 @@ class Agent{
         let amount = 0;
         for(let index=0; index<findAgent.commision.length; index++){
             let indii = findAgent.commision[index];
-            let findComission = await db.findOneCommision(indii);
-            amount += findComission.ommisionAmount;
+            let findComission = await db.findOneCommision({_id:indii});
+            amount += findComission.commisionAmount;
         }
         await db.updateOneAgent({_id:id},{$set:{totalCommisionAmmount:amount}});
         return true;

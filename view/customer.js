@@ -36,7 +36,7 @@ class Customer
         const role = "customer";
         let [dCredential,isCredCreated] = await db.insertOneCred(newCredential);
         let [record,isInserted]=await db.insertOneCustomer(
-            new Customer(firstName,lastName,dCredential._id,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation)
+            new Customer(firstName,lastName,dCredential._id,dob,age,address,email,role,state,city,pincode,nominee,nomineeRelation,agentName)
         );
         if(!isInserted)
         {
@@ -97,8 +97,7 @@ class Customer
     static async findPayPolicy(policyId)
     {
         const db = new DatabaseMongoose();
-        let record = await db.findOnePolicy(policyId);
-        console.log(record,"[][][][]");
+        let record = await db.findOnePolicy({_id:policyId});
         if(!record){
             return [false,null];
         }

@@ -3,7 +3,7 @@ const InstallmentLeft = require("./installLeft");
 const PolicyPayment = require("./policyPayment");
 const Customer = require("./customer");
 const Commision = require("./commision");
-let id = 1;
+let id = 0;
 class Policies {
   constructor(
     createdate,
@@ -20,7 +20,7 @@ class Policies {
     installmentLeft
   ) {
     this.dateCreated = createdate;
-    this.accountno = "ACCN00" + id++;
+    this.accountno =  id++;
     this.insuranceType = insuranceType;
     this.insuranceScheme = insuranceScheme;
     this.maturityDate = maturityDate;
@@ -103,7 +103,6 @@ class Policies {
       { userName: userName },
       { $push: { policies: newPolicy } }
     );
-    console.log(newPolicy._id);
     const [isInstallmetLeftIdExists, installmentLeftId] =
       await Customer.findPayPolicy(newPolicy._id);
     if (!isInstallmetLeftIdExists) {
@@ -121,7 +120,7 @@ class Policies {
       expireDate
     );
     if (!isPaymentDone) {
-      return [false, "Payment Not done"];
+      return [false, msz];
     }
     return [true, msz];
   }

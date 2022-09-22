@@ -261,6 +261,14 @@ class DatabaseMongoose {
       console.log(e.message);
     }
   }
+  async findOneCommision(comis) {
+    try {
+      let newRecord = await commisionModel.findOne(comis);
+      return newRecord;
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
 
 
 

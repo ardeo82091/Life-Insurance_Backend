@@ -52,17 +52,16 @@ class PolicyPayment {
     if (!findInsScheme) {
       return [false, "Insurance Scheme not found"];
     }
-    let commisionAmount = findInsScheme.commissionInstall / 100;
-    if (findinstallMent.installmentNo == 0) {
-      commisionAmount = findInsScheme.commissionNewReg / 100;
-    }
-
+  
     if (findinstallMent.paymentStatus != "Pending") {
       return [false, "Payment Already Done"];
     }
     const installAmount = findinstallMent.installAmount;
+    let commisionAmount = (findInsScheme.commissionInstall*installAmount) / 100;
+    if (findinstallMent.installmentNo == 1) {
+      commisionAmount = (findInsScheme.commissionNewReg*installAmount) / 100;
+    }
     const findInsuranceSetting = await db.findOneinsuranceSetting();
-    console.log(findInsuranceSetting);
     const penaltyper = findInsuranceSetting[0].penaltyPay;
     let penaltyfee = 0;
     if (findinstallMent.installmentDate < date) {
@@ -105,14 +104,14 @@ class PolicyPayment {
     if (!isUserExist) {
       return [false, "Customer not Found "];
     }
-    if (dUser.agentName == null) {
+    if (dUser.agentrefer == null) {
       return [true, "Payment Done"];
     }
 
-    const [isCommisonExist, msz1] = Commision.addcommision(
+    const [isCommisonExist, msz1] = await Commision.addcommision(
       accountNo,
       userName,
-      dUser.agentName,
+      dUser.agentrefer,
       insuranceScheme,
       commisionAmount
     );

@@ -21,6 +21,7 @@ class Commision{
             commisionAmount
         ));
         let [dAgent,isAgentExist] = await Agent.findAgent(agentName);
+        console.log(agentName);
         if(!isAgentExist)
         {
             return [false,"Agent not Found "];

@@ -78,6 +78,8 @@ async function payInstallment(req, resp) {
     return resp.status(403).send("Customer not Exists");
   }
   const {
+    accountNo,
+    insuranceScheme,
     installmentLeftId,
     paymentType,
     cardHolder,
