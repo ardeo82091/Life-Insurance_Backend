@@ -323,7 +323,7 @@ app.post("/api/v1/isAgentLogin/:userName", (req, resp) =>
 app.post("/api/v1/isEmployeeLogin/:userName", (req, resp) =>
   validEmployee(req, resp)
 );
-app.post("/api/v1/isAdminLogin", (req, resp) => validAdmin(req, resp));
+app.post("/api/v1/isAdminLogin/:userName", (req, resp) => validAdmin(req, resp));
 
 //logout
 app.post("/api/v1/logout", (req, resp) => logout(req, resp));
