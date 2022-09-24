@@ -88,9 +88,7 @@ async function updateInsuranceType(req, resp) {
       .status(403)
       .send("Require insuranceTypetoUpdate to Update Insurance Type");
   }
-  if (typeof value != "string") {
-    return resp.status(403).send("Require value to Update Insurance Type");
-  }
+
   const [isUpdate, msz] = await InsuranceType.updateInsuranceType(
     insuranceTypetoUpdate,
     value

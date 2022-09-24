@@ -3,7 +3,7 @@ const JWTPayload = require("../../view/authentication.js");
 const Credentials = require("../../view/credential.js");
 
 async function createAdmin() {
-  await Employee.createAdmin("ankit", "ankit@123", "Ankit", "Raj",true);
+  await Employee.createAdmin("ankit", "ankit@123", "Ankit", "Raj", true);
   return;
 }
 
@@ -150,14 +150,15 @@ async function deleteEmployee(req, resp) {
   return;
 }
 
-async function profile(req,resp){
+async function profile(req, resp) {
   const newPayload = JWTPayload.isValidateToken(
     req,
     resp,
     req.cookies["mytoken"]
   );
-  if (newPayload.role != "admin") {
-    resp.status(401).send("please specify this role to admin");
+  console.log(newPayload.role);
+  if (newPayload.role == "agent" || newPayload.role == "customer") {
+    resp.status(401).send("please specify this role to admin or employee");
     return;
   }
   if (newPayload.isActive == false) {
@@ -165,9 +166,8 @@ async function profile(req,resp){
     return;
   }
   const userName = req.params.userName;
-  const [findEmployee,isEmployeeExist] = await Employee.findEmployee(userName);
-  if(!isEmployeeExist)
-  {
+  const [findEmployee, isEmployeeExist] = await Employee.findEmployee(userName);
+  if (!isEmployeeExist) {
     resp.status(403).send("Employee not Found");
     return;
   }
@@ -182,5 +182,5 @@ module.exports = {
   noOfEmployee,
   updateEmployee,
   deleteEmployee,
-  profile
+  profile,
 };

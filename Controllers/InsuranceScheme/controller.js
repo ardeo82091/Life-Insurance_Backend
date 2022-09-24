@@ -33,6 +33,16 @@ async function createInsuranceScheme(req, resp, image) {
     isActive,
   } = req.body;
   isActive == "true" ? (isActive = true) : (isActive = false);
+  commissionNewReg = parseInt(commissionNewReg);
+  commissionInstall = parseInt(commissionInstall);
+  minTermPlan = parseInt(minTermPlan);
+  maxTermPlan = parseInt(maxTermPlan);
+  minAge = parseInt(minAge);
+  maxAge = parseInt(maxAge);
+  minInvestment = parseInt(minInvestment);
+  maxInvestment = parseInt(maxInvestment);
+  profitRatio = parseInt(profitRatio);
+
   if (typeof insuranceType != "string") {
     return resp
       .status(403)
@@ -178,9 +188,7 @@ async function updateInsuranceScheme(req, resp) {
       .status(403)
       .send("Require propertyToUpdate to Update Insurance Scheme");
   }
-  if (typeof value != "number") {
-    return resp.status(403).send("Require value to Update Insurance Scheme");
-  }
+
   const [isUpdate, msz] = await InsuranceScheme.updateInsScheme(
     schemetoUpdate,
     propertyToUpdate,

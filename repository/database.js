@@ -12,7 +12,7 @@ const policyPaymentModel = require("../model/policyPayment");
 const policyModel = require("../model/policies");
 const installLeftModel = require("../model/installLeft");
 const taxSettingModel = require("../model/taxSetting");
-const insuranceSettingModel = require("../model/insuranceSetting")
+const insuranceSettingModel = require("../model/insuranceSetting");
 const commisionModel = require("../model/commision");
 const policyClaimModel = require("../model/policyWithdraw");
 const commisionWithdrawModel = require("../model/commisionWithdaw");
@@ -146,7 +146,7 @@ class DatabaseMongoose {
       return e.message;
     }
   }
-  async insertOneCommision(commision){
+  async insertOneCommision(commision) {
     try {
       let newRecord = await commisionModel.create(commision);
       return newRecord;
@@ -154,7 +154,7 @@ class DatabaseMongoose {
       return e.message;
     }
   }
-  async insertOnePolicyClaim(commision){
+  async insertOnePolicyClaim(commision) {
     try {
       let newRecord = await policyClaimModel.create(commision);
       return newRecord;
@@ -162,7 +162,7 @@ class DatabaseMongoose {
       return e.message;
     }
   }
-  async insertOneWithdrawReq(commision){
+  async insertOneWithdrawReq(commision) {
     try {
       let newRecord = await commisionWithdrawModel.create(commision);
       return newRecord;
@@ -170,9 +170,6 @@ class DatabaseMongoose {
       return e.message;
     }
   }
-
-
-
 
   //find
   async findOneCustomer(user) {
@@ -257,7 +254,9 @@ class DatabaseMongoose {
   }
   async findOnePolicy(policy) {
     try {
-      let newRecord = await policyModel.findOne(policy).populate("installmentLeft");
+      let newRecord = await policyModel
+        .findOne(policy)
+        .populate("installmentLeft");
       return newRecord;
     } catch (e) {
       console.log(e.message);
@@ -303,10 +302,6 @@ class DatabaseMongoose {
       console.log(e.message);
     }
   }
-
-
-
-
 
   //update
   async updateOneCustomer(user, update) {
@@ -426,15 +421,15 @@ class DatabaseMongoose {
   }
   async updateOneCommisionWithdraw(percentage, update) {
     try {
-      let newRecord = await commisionWithdrawModel.updateOne(percentage, update);
+      let newRecord = await commisionWithdrawModel.updateOne(
+        percentage,
+        update
+      );
       return newRecord;
     } catch (e) {
       return e.message;
     }
   }
-
-
-
 
   //delete
   async deleteOneCred(cred) {
@@ -457,7 +452,10 @@ class DatabaseMongoose {
   //getall
   async getAllCustomers() {
     try {
-      let record = await customerModel.find().populate("credential");
+      let record = await customerModel
+        .find()
+        .populate("credential")
+        .populate("policies");
       return record;
     } catch (e) {
       console.log(e.message);
@@ -504,52 +502,49 @@ class DatabaseMongoose {
     }
   }
   async getAllPolicy() {
-    try{
-        let record = await policyModel.find().populate("installmentLeft");
-        return record;
-    }
-    catch (e) {
-        return e.message;
+    try {
+      let record = await policyModel.find().populate("installmentLeft");
+      return record;
+    } catch (e) {
+      return e.message;
     }
   }
   async AgentgetCustomer(agentName) {
-    try{
-        let record = await customerModel.find(agentName).populate("policies").populate("credential");
-        return record;
-    }
-    catch (e) {
-        return e.message;
+    try {
+      let record = await customerModel
+        .find(agentName)
+        .populate("policies")
+        .populate("credential");
+      return record;
+    } catch (e) {
+      return e.message;
     }
   }
   async getAgentAllTransaction(agentName) {
-    try{
-        let record = await agentModel.find(agentName).populate("transaction");
-        return record;
-    }
-    catch (e) {
-        return e.message;
-    }
-  }
-  
-  async getAllCommision() {
-    try{
-        let record = await commisionModel.find();
-        return record;
-    }
-    catch (e) {
-        return e.message;
-    }
-  }
-  async getAllTransaction() {
-    try{
-        let record = await commisionWithdrawModel.find();
-        return record;
-    }
-    catch (e) {
-        return e.message;
+    try {
+      let record = await agentModel.find(agentName).populate("transaction");
+      return record;
+    } catch (e) {
+      return e.message;
     }
   }
 
+  async getAllCommision() {
+    try {
+      let record = await commisionModel.find();
+      return record;
+    } catch (e) {
+      return e.message;
+    }
+  }
+  async getAllTransaction() {
+    try {
+      let record = await commisionWithdrawModel.find();
+      return record;
+    } catch (e) {
+      return e.message;
+    }
+  }
 }
 
 module.exports = { DatabaseMongoose };
