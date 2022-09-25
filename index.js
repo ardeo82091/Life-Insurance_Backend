@@ -232,13 +232,6 @@ app.post("/api/v1/getAllInstallmentPolicy/:userName", async (req, resp) =>
   getAllInstallments(req, resp)
 );
 
-//Commision
-app.post("/api/v1/getAllCommision", async (req, resp) =>
-  getAllCommision(req, resp)
-);
-app.post("/api/v1/getAllAgentCommision/:agentName", async (req, resp) =>
-  getAllAgentCommision(req, resp)
-);
 
 const {
   taxSetting,
