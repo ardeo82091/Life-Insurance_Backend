@@ -193,16 +193,27 @@ function validAdmin(req, resp) {
     resp,
     req.cookies["mytoken"]
   );
+  const userName = req.params.userName;
   if (newPayload.role != "admin") {
     resp.status(401).send("please specify this role to admin");
     return;
   }
-  if (newPayload.username != req.params.userName) {
-    resp.status(401).send("unauthorized access");
-    return false;
+  let [dUser, isUsernameExist] = await Employee.findEmployee(userName);
+  if (!isUsernameExist) {
+    resp.status(401).send("User Not Found");
+    return;
+  }
+  if (dUser.isActive == false) {
+    resp.status(401).send("User Not Found");
+    return;
+  }
+  if (newPayload.userName != dUser.credential) {
+    return resp.status(401).send("Login with your Id");
   }
   resp.status(201).send("LoggedIN");
   return;
+
+  
 }
 
 module.exports = {
