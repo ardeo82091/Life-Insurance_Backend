@@ -278,27 +278,6 @@ app.post("/api/v1/getAmountDescrip", async (req, resp) =>
   getAmountDescription(req, resp)
 );
 
-//Claim Policy
-app.post("/api/v1/reqPolicyClaim/:userName", async (req, resp) =>
-  reqClaim(req, resp)
-);
-app.post("/api/v1/accptPolicyClaim", async (req, resp) =>
-  accptClaim(req, resp)
-);
-
-//WithDraw Amount
-app.post("/api/v1/withdrawCommision/:userName", async (req, resp) =>
-  withDrawClaim(req, resp)
-);
-app.post("/api/v1/accptwithdraw", async (req, resp) =>
-  accptWithDraw(req, resp)
-);
-app.post("/api/v1/getallCommisionWithdraw", async (req, resp) =>
-  allCommisionWithdraw(req, resp)
-);
-app.post("/api/v1/getallAgentCommisionWithdraw/:agentName", async (req, resp) =>
-  allAgentCommisionWithdraw(req, resp)
-);
 
 const {
   profileAgent,
